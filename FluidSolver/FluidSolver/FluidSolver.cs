@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Net.NetworkInformation;
+using System.Numerics;
+
 namespace FluidSolver {
     public class FluidSolver {
         private List<Particle> _particleList;
@@ -13,10 +17,15 @@ namespace FluidSolver {
         private double _tensionCoefficient; //sigma
         private double _gravityAcceleration; //g
        
-        public FluidSolver(Vector inContainerVolume) {
+        public FluidSolver(Vector inContainerVolume,double inCoreRadius) {
             this._containerVolume = inContainerVolume;
             this._particleList = new List<Particle>();
             this._particleNum = 0;
+            this._coreRadius = inCoreRadius;
+            var tmpRestriction = new Vector(100, 100, 50);
+            InitParticles(1000,1,tmpRestriction);
+            CalDensity();
+            TestCalDensity();
         }
 
         public void InitParticles(int inParticleNum,double inParticleMass,Vector inPosRestriction){
@@ -35,6 +44,23 @@ namespace FluidSolver {
             }
         }
 
+        private void CalDensity() {
+            double hSquare = this._coreRadius * this._coreRadius;
+            double tmpCoefficient = 315 / (64 * Math.PI * Math.Pow(hSquare, 9));
+            foreach (var pI in this._particleList) {
+                double tmpDensity = 0;
+                foreach (var pJ in this._particleList) {
+                    double tmpDisSqu = Vector.DistanceSquare(pI.Position, pJ.Position);
+                    if (tmpDisSqu < hSquare) {
+                        tmpDensity += Math.Pow(hSquare - tmpDisSqu, 3);
+                    }
+                }
+
+                tmpDensity *= pI.Mass * tmpCoefficient;
+                pI.Density = tmpDensity;
+            }
+        }
+
         public void TestInitParticles() {
             Console.WriteLine(this._particleList.Count);
             int counter = 0;
@@ -42,18 +68,24 @@ namespace FluidSolver {
                 Console.WriteLine(counter ++ +" "+p.Position.ToString());
             }
         }
+
+        public void TestCalDensity() {
+            foreach (var p in this._particleList) {
+                Console.WriteLine(p.Density);
+            }
+        }
     }
 
     public class Particle {
         
-        private double mass;
-        private Vector position;
-        private double density;
-        private double pressure;
-        private Vector velocity;
-        private Vector acceleration;
-        private Vector pressureForce;
-        private Vector viscosityForce;
+        private double _mass;
+        private Vector _position;
+        private double _density;
+        private double _pressure;
+        private Vector _velocity;
+        private Vector _acceleration;
+        private Vector _pressureForce;
+        private Vector _viscosityForce;
 
         
         public Particle (){
@@ -61,54 +93,50 @@ namespace FluidSolver {
         }
         
         public Particle(double inMass,Vector inPosition){
-            this.mass = inMass;
-            this.position = inPosition;
-        }
-
-
-        void CalDensity(double inGasConstant,double inRestDensity){
-
+            this._mass = inMass;
+            this._position = inPosition;
+            this._density = 0;
         }
 
 
         public double Mass {
-            get => mass;
-            set => mass = value;
+            get => _mass;
+            set => _mass = value;
         }
 
         public Vector Position {
-            get => position;
-            set => position = value;
+            get => _position;
+            set => _position = value;
         }
 
         public double Density {
-            get => density;
-            set => density = value;
+            get => _density;
+            set => _density = value;
         }
 
         public double Pressure {
-            get => pressure;
-            set => pressure = value;
+            get => _pressure;
+            set => _pressure = value;
         }
 
         public Vector Velocity {
-            get => velocity;
-            set => velocity = value;
+            get => _velocity;
+            set => _velocity = value;
         }
 
         public Vector Acceleration {
-            get => acceleration;
-            set => acceleration = value;
+            get => _acceleration;
+            set => _acceleration = value;
         }
 
         public Vector PressureForce {
-            get => pressureForce;
-            set => pressureForce = value;
+            get => _pressureForce;
+            set => _pressureForce = value;
         }
 
         public Vector ViscosityForce {
-            get => viscosityForce;
-            set => viscosityForce = value;
+            get => _viscosityForce;
+            set => _viscosityForce = value;
         }
     }
 }

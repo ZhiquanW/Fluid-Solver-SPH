@@ -1,3 +1,5 @@
+using System;
+
 namespace FluidSolver {
     public class Vector {
 
@@ -29,6 +31,10 @@ namespace FluidSolver {
         public double Z {
             get => _z;
             set => _z = value;
+        }
+
+        public static double DistanceSquare(Vector v1, Vector v2) {
+            return Math.Pow(v1.X - v2.X, 2) + Math.Pow(v1.Y - v2.Y, 2) + Math.Pow(v1.Z - v2.Z, 2);
         }
     }
 }
