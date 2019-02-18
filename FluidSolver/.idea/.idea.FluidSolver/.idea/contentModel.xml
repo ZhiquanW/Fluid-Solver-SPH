@@ -6,7 +6,9 @@
     <e p="$USER_HOME$/.Rider2018.3/system/resharper-host/local/Transient/ReSharperHost/v183/SolutionCaches/_FluidSolver.1841781226.00" t="ExcludeRecursive" />
     <e p="$PROJECT_DIR$" t="IncludeFlat">
       <e p="FluidSolver" t="IncludeRecursive">
+        <e p="FluidSolver.cs" t="Include" />
         <e p="FluidSolver.csproj" t="IncludeRecursive" />
+        <e p="Math.cs" t="Include" />
         <e p="Program.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">
