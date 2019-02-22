@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.NetworkInformation;
 using System.Numerics;
+using System.Reflection.Metadata;
 
 namespace FluidSolver {
     public class FluidSolver {
@@ -59,9 +60,7 @@ namespace FluidSolver {
                         tmpDensity += (float )Math.Pow(hSquare - tmpDisSqu, 3);
                     }
                 }
-
-                tmpDensity *= pI.Mass * tmpCoefficient;
-                pI.Density = tmpDensity;
+                pI.Density = pI.Mass * tmpCoefficient * tmpDensity;
             }
         }
 
@@ -83,7 +82,47 @@ namespace FluidSolver {
                                   Vector3.Normalize(pI.Position - pJ.Position);
                     }
                 }
-                tmpVec *= pI.Mass * tmpCoefficient * tmpVec;
+                pI.PressureForceAcceleration = pI.Mass * tmpCoefficient * tmpVec;
+            }
+        }
+
+        private void ComputeViscosityForceAcceleration() {
+            float tmpCoefficient = (float) (this._viscosityCoefficient*45 / (Math.PI * Math.Pow(this._coreRadius, 6)));
+            foreach (var pI in this._particleList) {
+                var tmpVec = new Vector3();
+                foreach (var pJ in this._particleList) {
+                    float tmpDis = Vector3.Distance(pI.Position, pJ.Position);
+                    if (tmpDis < this._coreRadius) {
+                        tmpVec += (pI.Velocity - pJ.Velocity) / (pI.Density * pJ.Density) * this._coreRadius * tmpDis;
+                    }
+                }
+                pI.ViscosityForceAcceleration = pI.Mass * tmpCoefficient * tmpVec;
+            }
+        }
+
+        private void ComputeGravityAcceleration() {
+            foreach (var pI in this._particleList) {
+                pI.GravityAcceleration = this._gravityAcceleration * new Vector3(0, 0, -1);
+            }
+        }
+
+        private void ComputeSurfaceTensionAcceleration() {
+            float tmpCoefficient = (float) (-945 / (32 * Math.PI * Math.Pow(this._coreRadius,9)));
+            float tmpCoefficientLaplacian = (float) (945 / (8 * Math.PI * Math.Pow(this._coreRadius, 9)));
+            foreach (var pI in this._particleList) {
+                Vector3 colorFieldGradient = new Vector3();
+                float colorFieldLaplacian = 0;
+                foreach (var pJ in this._particleList) {
+                    float tmpDis = Vector3.Distance(pI.Position, pJ.Position);
+                    if (tmpDis < this._coreRadius) {
+                        colorFieldGradient += (float) (1 / pI.Density *
+                                                       Math.Pow(
+                                                           Math.Pow(this._coreRadius, 2) -
+                                                           Vector3.DistanceSquared(pI.Position, pJ.Position), 2)) *
+                                              (pI.Position - pJ.Position);
+                        colorFieldLaplacian += 1/pI.Density
+                    }
+                }
             }
         }
         public void TestInitParticles() {
@@ -102,16 +141,6 @@ namespace FluidSolver {
     }
 
     public class Particle {
-        private int _index = 0;
-        private float _mass = 0;
-        private Vector3 _position = new Vector3();
-        private float _density = 0;
-        private float _pressure = 0;
-        private Vector3 _velocity = new Vector3();
-        private Vector3 _totalAcceleration = new Vector3();
-        private Vector3 _pressureForceAcceleration = new Vector3();
-        private Vector3 _viscosityForceAcceleration = new Vector3();
-        
         public Particle (){
 
         }
@@ -119,54 +148,28 @@ namespace FluidSolver {
         public Particle(int inIndex, float inMass,Vector3 inPosition) {
             this.Index = inIndex;
             this.Mass = inMass;
-            this._position = inPosition;
+            this.Position = inPosition;
         }
 
 
-        public int Index {
-            get => _index;
-            set => _index = value;
-        }
+        public int Index { get; set; } = 0;
 
-        public float Mass {
-            get => _mass;
-            set => _mass = value;
-        }
+        public float Mass { get; set; } = 0;
 
-        public Vector3 Position {
-            get => _position;
-            set => _position = value;
-        }
+        public Vector3 Position { get; set; } = new Vector3();
 
-        public float Density {
-            get => _density;
-            set => _density = value;
-        }
+        public float Density { get; set; } = 0;
 
-        public float Pressure {
-            get => _pressure;
-            set => _pressure = value;
-        }
+        public float Pressure { get; set; } = 0;
 
-        public Vector3 Velocity {
-            get => _velocity;
-            set => _velocity = value;
-        }
+        public Vector3 Velocity { get; set; } = new Vector3();
 
-        public Vector3 TotalAcceleration {
-            get => _totalAcceleration;
-            set => _totalAcceleration = value;
-        }
+        public Vector3 TotalAcceleration { get; set; } = new Vector3();
 
-        public Vector3 PressureForceAcceleration {
-            get => _pressureForceAcceleration;
-            set => _pressureForceAcceleration = value;
-        }
+        public Vector3 PressureForceAcceleration { get; set; } = new Vector3();
 
-        public Vector3 ViscosityForceAcceleration {
-            get => _viscosityForceAcceleration;
-            set => _viscosityForceAcceleration = value;
-        }
- 
+        public Vector3 ViscosityForceAcceleration { get; set; } = new Vector3();
+
+        public Vector3 GravityAcceleration { get; set; } = new Vector3();
     }
 }
