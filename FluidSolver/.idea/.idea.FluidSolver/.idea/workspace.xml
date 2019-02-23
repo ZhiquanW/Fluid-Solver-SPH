@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="df495d78-e4e5-4d47-88fd-ccb5ba7626b9" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/FluidSolver/FluidSolver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FluidSolver/FluidSolver.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FluidSolver/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FluidSolver/Program.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,12 +16,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FluidSolver/Program.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
+            <state relative-caret-position="266">
+              <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
               <folding>
-                <marker date="1550910816464" expanded="true" signature="37:328" ph="{...}" />
-                <marker date="1550910816464" expanded="true" signature="64:321" ph="{...}" />
-                <marker date="1550910816464" expanded="true" signature="106:315" ph="{...}" />
+                <marker date="1550924014911" expanded="true" signature="6:36" ph="..." />
+                <marker date="1550924014911" expanded="true" signature="60:352" ph="{...}" />
+                <marker date="1550924014911" expanded="true" signature="87:345" ph="{...}" />
+                <marker date="1550924014911" expanded="true" signature="129:339" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -29,45 +31,47 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FluidSolver/FluidSolver.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="57">
-              <caret line="121" column="75" selection-start-line="121" selection-start-column="75" selection-end-line="121" selection-end-column="75" />
+            <state relative-caret-position="280">
+              <caret line="47" column="13" selection-start-line="47" selection-start-column="13" selection-end-line="47" selection-end-column="13" />
               <folding>
-                <marker date="1550920313320" expanded="false" signature="6:170" ph="..." />
-                <marker date="1550920313320" expanded="true" signature="194:7300" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="225:6397" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="782:1190" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="1117:1180" ph="/* ComputeDensity(); ... */" />
-                <marker date="1550920313320" expanded="true" signature="1290:2100" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="1743:2088" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="1792:2074" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="1845:2056" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="2140:2792" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="2348:2782" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="2443:2700" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="2579:2682" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="2833:2987" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="2885:2977" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="3045:3842" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="3192:3832" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="3293:3736" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="3425:3718" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="3901:4574" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="4074:4564" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="4175:4467" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="4307:4449" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="4626:4796" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="4679:4786" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="4855:5955" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="5114:5945" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="5278:5931" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="5410:5913" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="5996:6229" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="6134:6219" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="6268:6391" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="6320:6381" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="6425:7298" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="6453:6465" ph="{...}" />
-                <marker date="1550920313320" expanded="true" signature="6545:6662" ph="{...}" />
+                <marker date="1550926850852" expanded="false" signature="6:170" ph="..." />
+                <marker date="1550926850852" expanded="true" signature="194:8004" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="225:7026" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="776:1186" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="1113:1176" ph="/* ComputeDensity(); ... */" />
+                <marker date="1550926850852" expanded="true" signature="1289:2128" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="1763:2118" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="1812:2104" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="1865:2086" ph="{...}" />
+                <marker date="1550926850852" expanded="false" signature="2168:2821" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="2376:2811" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="2471:2728" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="2607:2710" ph="{...}" />
+                <marker date="1550926850852" expanded="false" signature="2862:3016" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="2914:3006" ph="{...}" />
+                <marker date="1550926850852" expanded="false" signature="3074:3871" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="3220:3861" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="3321:3764" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="3453:3746" ph="{...}" />
+                <marker date="1550926850852" expanded="false" signature="3930:4622" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="4121:4612" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="4222:4514" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="4354:4496" ph="{...}" />
+                <marker date="1550926850852" expanded="false" signature="4674:4844" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="4727:4834" ph="{...}" />
+                <marker date="1550926850852" expanded="false" signature="4903:6254" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="5231:6244" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="5395:6018" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="5615:6000" ph="{...}" />
+                <marker date="1550926850852" expanded="false" signature="6304:6579" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="6357:6569" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="6621:6858" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="6759:6848" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="6897:7020" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="6949:7010" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="7054:8002" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="7082:7094" ph="{...}" />
+                <marker date="1550926850852" expanded="true" signature="7167:7284" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -111,23 +115,44 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Program.cs" />
-        <option value="$PROJECT_DIR$/FluidSolver/Program.cs" />
         <option value="$PROJECT_DIR$/FluidSolver/Math.cs" />
+        <option value="$PROJECT_DIR$/FluidSolver/Program.cs" />
         <option value="$PROJECT_DIR$/FluidSolver/FluidSolver.cs" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="y" value="27" />
     <option name="width" value="1920" />
     <option name="height" value="1053" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="FileSystemExplorer" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="SolutionExplorer">
+        <option name="show-all-files" value="false" />
+      </pane>
+      <pane id="FileSystemExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Project" type="161ac34:FileSystemExplorerRootNode" />
+              <item name="FluidSolver" type="34e6ba20:FileSystemExplorerNode" />
+            </path>
+            <path>
+              <item name="Project" type="161ac34:FileSystemExplorerRootNode" />
+              <item name="FluidSolver" type="34e6ba20:FileSystemExplorerNode" />
+              <item name="FluidSolver" type="34e6ba20:FileSystemExplorerNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="AssemblyExplorer" />
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
@@ -135,7 +160,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="project.propDebugger" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C#" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -151,9 +176,9 @@
   </component>
   <component name="RunManager">
     <configuration name="Default" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/FluidSolver/bin/Debug/netcoreapp2.2/FluidSolver.dll" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/bin/Debug/netcoreapp2.2/FluidSolver.dll" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FluidSolver" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <envs>
         <env name="ASPNETCORE_ENVIRONMENT" value="Development" />
@@ -162,7 +187,7 @@
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/FluidSolver/FluidSolver.csproj" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/FluidSolver.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
@@ -187,12 +212,12 @@
       <workItem from="1550392217539" duration="3783000" />
       <workItem from="1550409346054" duration="15704000" />
       <workItem from="1550555277952" duration="12807000" />
-      <workItem from="1550914543885" duration="612000" />
+      <workItem from="1550914543885" duration="3306000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32906000" />
+    <option name="totallyTimeSpent" value="35600000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -204,10 +229,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
+    <frame x="0" y="0" width="1280" height="720" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.1700864" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17017828" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Capture Tool" order="3" />
@@ -234,7 +259,7 @@
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="right" id="Errors In Solution" order="4" weight="0.32991362" />
       <window_info anchor="right" id="Database" order="5" />
-      <window_info anchor="right" auto_hide="true" x="29" y="156" width="2127" height="344" id="Run" order="6" weight="0.32397407" />
+      <window_info anchor="right" auto_hide="true" x="29" y="156" width="2127" height="344" id="Run" order="6" weight="0.32388663" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -256,18 +281,6 @@
     <entry file="file://$PROJECT_DIR$/Program.cs" />
     <entry file="file://$PROJECT_DIR$/Math.cs" />
     <entry file="file://$PROJECT_DIR$/FluidSolver.cs" />
-    <entry file="file://$PROJECT_DIR$/FluidSolver/Program.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="8" column="12" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
-          <folding>
-            <marker date="1550910816464" expanded="true" signature="37:328" ph="{...}" />
-            <marker date="1550910816464" expanded="true" signature="64:321" ph="{...}" />
-            <marker date="1550910816464" expanded="true" signature="106:315" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/FluidSolver/Math.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="585">
@@ -278,47 +291,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/FluidSolver/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
+          <folding>
+            <marker date="1550924014911" expanded="true" signature="6:36" ph="..." />
+            <marker date="1550924014911" expanded="true" signature="60:352" ph="{...}" />
+            <marker date="1550924014911" expanded="true" signature="87:345" ph="{...}" />
+            <marker date="1550924014911" expanded="true" signature="129:339" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/FluidSolver/FluidSolver.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="57">
-          <caret line="121" column="75" selection-start-line="121" selection-start-column="75" selection-end-line="121" selection-end-column="75" />
+        <state relative-caret-position="280">
+          <caret line="47" column="13" selection-start-line="47" selection-start-column="13" selection-end-line="47" selection-end-column="13" />
           <folding>
-            <marker date="1550920313320" expanded="false" signature="6:170" ph="..." />
-            <marker date="1550920313320" expanded="true" signature="194:7300" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="225:6397" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="782:1190" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="1117:1180" ph="/* ComputeDensity(); ... */" />
-            <marker date="1550920313320" expanded="true" signature="1290:2100" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="1743:2088" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="1792:2074" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="1845:2056" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="2140:2792" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="2348:2782" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="2443:2700" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="2579:2682" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="2833:2987" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="2885:2977" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="3045:3842" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="3192:3832" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="3293:3736" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="3425:3718" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="3901:4574" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="4074:4564" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="4175:4467" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="4307:4449" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="4626:4796" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="4679:4786" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="4855:5955" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="5114:5945" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="5278:5931" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="5410:5913" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="5996:6229" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="6134:6219" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="6268:6391" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="6320:6381" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="6425:7298" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="6453:6465" ph="{...}" />
-            <marker date="1550920313320" expanded="true" signature="6545:6662" ph="{...}" />
+            <marker date="1550926850852" expanded="false" signature="6:170" ph="..." />
+            <marker date="1550926850852" expanded="true" signature="194:8004" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="225:7026" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="776:1186" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="1113:1176" ph="/* ComputeDensity(); ... */" />
+            <marker date="1550926850852" expanded="true" signature="1289:2128" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="1763:2118" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="1812:2104" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="1865:2086" ph="{...}" />
+            <marker date="1550926850852" expanded="false" signature="2168:2821" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="2376:2811" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="2471:2728" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="2607:2710" ph="{...}" />
+            <marker date="1550926850852" expanded="false" signature="2862:3016" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="2914:3006" ph="{...}" />
+            <marker date="1550926850852" expanded="false" signature="3074:3871" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="3220:3861" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="3321:3764" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="3453:3746" ph="{...}" />
+            <marker date="1550926850852" expanded="false" signature="3930:4622" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="4121:4612" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="4222:4514" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="4354:4496" ph="{...}" />
+            <marker date="1550926850852" expanded="false" signature="4674:4844" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="4727:4834" ph="{...}" />
+            <marker date="1550926850852" expanded="false" signature="4903:6254" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="5231:6244" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="5395:6018" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="5615:6000" ph="{...}" />
+            <marker date="1550926850852" expanded="false" signature="6304:6579" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="6357:6569" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="6621:6858" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="6759:6848" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="6897:7020" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="6949:7010" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="7054:8002" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="7082:7094" ph="{...}" />
+            <marker date="1550926850852" expanded="true" signature="7167:7284" ph="{...}" />
           </folding>
         </state>
       </provider>
