@@ -119,7 +119,7 @@ namespace FluidSolver {
                                                        Math.Pow(
                                                            Math.Pow(this._coreRadius, 2) -
                                                            Vector3.DistanceSquared(pI.Position, pJ.Position), 2)) *
-                                              (pI.Position - pJ.Position);
+                                              (pI.Position - pJ.Position); 
                         colorFieldLaplacian += 1/pI.Density
                     }
                 }
