@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Net.NetworkInformation;
 using System.Numerics;
 using System.Reflection.Metadata;
 
 namespace FluidSolver {
     public class FluidSolver {
+        private FluidDatabase _fluidDatabase;
         private List<Particle> _particleList;
         private Vector3 _containerVolume;
         private int _particleNum;
@@ -23,25 +25,44 @@ namespace FluidSolver {
             this._particleList = new List<Particle>();
             this._particleNum = 0;
             this._coreRadius = inCoreRadius;
-            var tmpRestriction = new Vector3(100, 100, 50);
-            InitParticles(1000, 1, tmpRestriction);
-            TestInitParticles();
-//            ComputeDensity();
-//            TestCalDensity();
+            this._fluidDatabase = new FluidDatabase();
         }
 
-        public void InitParticles(int inParticleNum, float inParticleMass, Vector3 inPosRestriction) {
-            float posInterval =
-                (float) Math.Pow(inPosRestriction.X * inPosRestriction.Y * inPosRestriction.Z / inParticleNum, 1 / 3f);
-            int xNum = (int) (inPosRestriction.X / posInterval);
-            int yNum = (int) (inPosRestriction.Y / posInterval);
-            int zNum = (int) (inPosRestriction.Z / posInterval);
-            this._particleNum += xNum * yNum * zNum;
+        public void StartImitation(float inFrameNum, float inTimeStep, string inFileName) {
+            this._fluidDatabase.TimeStep = inTimeStep;
+            this._fluidDatabase.TimeDuration = inFrameNum * inTimeStep;
+            DateTime startTime = DateTime.Now;
+            DateTime endTime = new DateTime();
+            for (int i = 0; i < inFrameNum; ++i) {
+                Console.SetCursorPosition(0, 1);
+                ComputeDensity();
+                ComputePressure();
+                ComputeGravityAcceleration();
+                ComputePressureForceAcceleration();
+                ComputeViscosityForceAcceleration();
+                ComputeSurfaceTensionAcceleration();
+                ComputeTotalAcceleration();
+                UpdatePosition(inTimeStep);
+                endTime = DateTime.Now;
+                float runtime = (float) endTime.Subtract(startTime).TotalMilliseconds / 1000;
+                float progressPercentage = (float) (i + 1) / inFrameNum * 100;
+                float remainingTime = progressPercentage / runtime * (100 - progressPercentage);
+                Console.WriteLine("Progress: " + progressPercentage.ToString("F3") + "% "
+                                  + "Runtime: " + runtime.ToString("F3") + "s "
+                                  + "EstimatedTime: " + remainingTime.ToString("F3") + "s ");
+            }
+
+            this._fluidDatabase.Output(inFileName);
+        }
+
+        public void InitParticles(Vector3 inParticleVolume, float inParticleInterval, float inParticleMass) {
+            this._particleNum = (int) (inParticleVolume.X * inParticleVolume.Y * inParticleVolume.Z);
             int counter = 0;
-            for (int i = 0; i < xNum; ++i) {
-                for (int j = 0; j < yNum; ++j) {
-                    for (int k = 0; k < zNum; ++k) {
-                        var tmpPos = new Vector3(posInterval * i, posInterval * j, posInterval * k);
+            for (int i = 0; i < inParticleVolume.X; ++i) {
+                for (int j = 0; j < inParticleVolume.Y; ++j) {
+                    for (int k = 0; k < inParticleVolume.Z; ++k) {
+                        var tmpPos = new Vector3(inParticleInterval * i, inParticleInterval * j,
+                            inParticleInterval * k);
                         this._particleList.Add(new Particle(counter++, inParticleMass, tmpPos));
                     }
                 }
@@ -139,6 +160,15 @@ namespace FluidSolver {
             }
         }
 
+        private void UpdatePosition(float inTimeStep) {
+            foreach (var pI in this._particleList) {
+                pI.Velocity += pI.TotalAcceleration * inTimeStep;
+                pI.Position += pI.Velocity * inTimeStep;
+            }
+
+            this._fluidDatabase.AddParticles(this._particleList);
+        }
+
         public void TestInitParticles() {
             Console.WriteLine(this._particleList.Count);
             int counter = 0;
@@ -150,6 +180,37 @@ namespace FluidSolver {
         public void TestCalDensity() {
             foreach (var p in this._particleList) {
                 Console.WriteLine(p.Density);
+            }
+        }
+
+    }
+
+    public class FluidDatabase {
+        public float TimeStep { get; set; } = 0;
+
+        public float TimeDuration { private get; set; }
+
+        private readonly List<List<Particle>> _fluidMatrix = new List<List<Particle>>();
+
+        public FluidDatabase() {
+        }
+
+        public void AddParticles(List<Particle> inParticleList) {
+            this._fluidMatrix.Add(inParticleList);
+        }
+
+        public void Output(string inFileName) {
+            using (System.IO.StreamWriter file =
+                new System.IO.StreamWriter(inFileName)) {
+                file.WriteLine(TimeDuration.ToString(CultureInfo.InvariantCulture));
+                file.WriteLine(TimeStep.ToString(CultureInfo.InvariantCulture));
+                int counter = 0;
+                foreach (var particleList in this._fluidMatrix) {
+                    file.WriteLine(counter.ToString());
+                    foreach (var pI in particleList) {
+                        file.WriteLine(pI.ToString()); 
+                    }
+                }
             }
         }
     }
@@ -164,7 +225,6 @@ namespace FluidSolver {
             this.Mass = inMass;
             this.Position = inPosition;
         }
-
 
         public int Index { get; set; } = 0;
 
@@ -187,5 +247,9 @@ namespace FluidSolver {
         public Vector3 GravityAcceleration { get; set; } = new Vector3();
 
         public Vector3 SurfaceTensionAcceleration { get; set; } = new Vector3();
+
+        public override string ToString() {
+            return Index+ " " +Position.Z+" "+Position.Y+" "+Position.Z;
+        }
     }
 }

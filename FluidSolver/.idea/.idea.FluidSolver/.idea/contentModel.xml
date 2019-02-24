@@ -4,6 +4,7 @@
     <e p="C:\Users\wzqzh\.Rider2018.3\system\extResources" t="IncludeRecursive" />
     <e p="C:\Users\wzqzh\.Rider2018.3\system\resharper-host\local\Transient\ReSharperHost\v183\SolutionCaches\_FluidSolver.-2145558878.00" t="ExcludeRecursive" />
     <e p="C:\Users\wzqzh\Documents\Git-Repository\Fluid-Solver-SPH\FluidSolver" t="IncludeRecursive">
+      <e p="4444.fb" t="Include" />
       <e p="bin" t="ExcludeRecursive" />
       <e p="FluidSolver" t="Include">
         <e p="bin" t="Include">
@@ -29,6 +30,7 @@
         </e>
       </e>
       <e p="packages" t="ExcludeRecursive" />
+      <e p="test1.fd" t="Include" />
     </e>
   </component>
 </project>
