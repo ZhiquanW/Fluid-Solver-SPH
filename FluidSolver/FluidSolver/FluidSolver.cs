@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Net.NetworkInformation;
 using System.Numerics;
 using System.Reflection.Metadata;
@@ -157,6 +158,60 @@ namespace FluidSolver {
             foreach (var pI in this._particleList) {
                 pI.TotalAcceleration = pI.GravityAcceleration + pI.PressureForceAcceleration +
                                        pI.ViscosityForceAcceleration + pI.SurfaceTensionAcceleration;
+            }
+        }
+
+        private float IntersectionDetection(Vector3 inVecPos, Vector3 inVecDir, Vector3 inPlanePoint,
+            Vector3 inPlaneNormal) {
+            float vecNDotPlaneN = Vector3.Dot(inVecDir, inPlaneNormal);
+            if (Math.Abs(vecNDotPlaneN) <= TOLERANCE) {
+                return 0f;
+            } else {
+                float tmpValue = Vector3.Dot(inVecDir, inPlanePoint - inVecPos);
+                return tmpValue / vecNDotPlaneN;
+            }
+        }
+
+        private Vector3 Reflection(Vector3 inVec, Vector3 inNormal) {
+            return inVec - 2 * Vector3.Dot(inVec, inNormal) * inNormal;
+        }
+        private void RestrictionParticles() {
+            foreach (var pI in this._particleList) {
+                bool isOutside = !(0 < pI.Position.X && pI.Position.X < this._containerVolume.X &&
+                                   0 < pI.Position.Y && pI.Position.Y < this._containerVolume.Y &&
+                                   0 < pI.Position.Z && pI.Position.Z < this._containerVolume.Z);
+                if (isOutside) {
+                    var vecDir = -Vector3.Normalize(pI.Velocity);
+                    float disTopBorder = IntersectionDetection(pI.Position, vecDir,
+                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
+                        new Vector3(0, 1, 0));
+                    float disFrontBorder = IntersectionDetection(pI.Position, vecDir,
+                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
+                        new Vector3(1, 0, 0));
+                    float disRightBorder = IntersectionDetection(pI.Position, vecDir,
+                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
+                        new Vector3(0, 0, 1));
+                    float disBottomBorder = IntersectionDetection(pI.Position, vecDir,
+                        new Vector3(0, 0, 0), new Vector3(0, -1, 0));
+                    float disBackBorder = IntersectionDetection(pI.Position, vecDir,
+                        new Vector3(0, 0, 0), new Vector3(-1, 0, 0));
+                    float disLeftBorder = IntersectionDetection(pI.Position, vecDir,
+                        new Vector3(0, 0, 0), new Vector3(0, 0, -1));
+                    float[] disArr =
+                        {disTopBorder, disBottomBorder, disFrontBorder, disBackBorder, disRightBorder, disLeftBorder};
+                    float tmpMin = Math.Abs(disTopBorder);
+                    float tmpIndex = 0;
+                    float counter = 0;
+                    foreach (var val in disArr) {
+                        ++counter;
+                        if (val > 0 && val < tmpMin) {
+                            tmpMin = val;
+                            tmpIndex = counter;
+                        }
+                    }
+                    Vector3[] normalArr = 
+
+                }
             }
         }
 

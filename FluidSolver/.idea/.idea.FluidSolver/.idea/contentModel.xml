@@ -1,36 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\wzqzh\.Rider2018.3\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\wzqzh\.Rider2018.3\system\resharper-host\local\Transient\ReSharperHost\v183\SolutionCaches\_FluidSolver.-2145558878.00" t="ExcludeRecursive" />
-    <e p="C:\Users\wzqzh\Documents\Git-Repository\Fluid-Solver-SPH\FluidSolver" t="IncludeRecursive">
-      <e p="4444.fb" t="Include" />
-      <e p="bin" t="ExcludeRecursive" />
-      <e p="FluidSolver" t="Include">
-        <e p="bin" t="Include">
+    <e p="$APPLICATION_CONFIG_DIR$/scratches" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.3/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2018.3/system/resharper-host/local/Transient/ReSharperHost/v183/SolutionCaches/_FluidSolver.1841781226.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeFlat">
+      <e p="FluidSolver" t="IncludeRecursive">
+        <e p="FluidSolver.cs" t="Include" />
+        <e p="FluidSolver.csproj" t="IncludeRecursive" />
+        <e p="Math.cs" t="Include" />
+        <e p="Program.cs" t="Include" />
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
           <e p="Debug" t="Include">
             <e p="netcoreapp2.2" t="Include">
-              <e p="FluidSolver.deps.json" t="Include" />
-              <e p="FluidSolver.dll" t="Include" />
-              <e p="FluidSolver.runtimeconfig.dev.json" t="Include" />
-              <e p="FluidSolver.runtimeconfig.json" t="Include" />
+              <e p="FluidSolver.AssemblyInfo.cs" t="Include" />
             </e>
           </e>
         </e>
-        <e p="FluidSolver.cs" t="Include" />
-        <e p="Math.cs" t="Include" />
-        <e p="Program.cs" t="Include" />
       </e>
-      <e p="FluidSolver.csproj" t="IncludeRecursive" />
-      <e p="obj" t="ExcludeRecursive">
-        <e p="Debug" t="Include">
-          <e p="netcoreapp2.2" t="Include">
-            <e p="FluidSolver.AssemblyInfo.cs" t="Include" />
-          </e>
-        </e>
-      </e>
+      <e p="FluidSolver.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
-      <e p="test1.fd" t="Include" />
     </e>
   </component>
 </project>
