@@ -36,6 +36,7 @@ namespace FluidSolver {
             DateTime endTime = new DateTime();
             for (int i = 0; i < inFrameNum; ++i) {
                 Console.SetCursorPosition(0, 1);
+                RestrictionParticles();
                 ComputeDensity();
                 ComputePressure();
                 ComputeGravityAcceleration();
@@ -149,7 +150,7 @@ namespace FluidSolver {
                     }
                 }
 
-                pI.SurfaceTensionAcceleration = -1 * _tensionCoefficient * pI.Mass * tmpCoefficientLaplacian /
+                pI.SurfaceTensionAcceleration = -1 * _tensionCoefficient * pI.Mass * tmpCoefficientLaplacian*colorFieldLaplacian /
                                                 pI.Density * Vector3.Normalize(colorFieldGradient);
             }
         }
@@ -189,26 +190,36 @@ namespace FluidSolver {
                                    0 < pI.Position.Z && pI.Position.Z < this._containerVolume.Z);
                 if (isOutside) {
                     var vecDir = -Vector3.Normalize(pI.Velocity);
-                    float disTopBorder = IntersectionDetection(pI.Position, vecDir,
-                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
-                        new Vector3(0, 1, 0));
-                    float disFrontBorder = IntersectionDetection(pI.Position, vecDir,
-                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
-                        new Vector3(1, 0, 0));
-                    float disRightBorder = IntersectionDetection(pI.Position, vecDir,
-                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
-                        new Vector3(0, 0, 1));
-                    float disBottomBorder = IntersectionDetection(pI.Position, vecDir,
-                        new Vector3(0, 0, 0), new Vector3(0, -1, 0));
-                    float disBackBorder = IntersectionDetection(pI.Position, vecDir,
-                        new Vector3(0, 0, 0), new Vector3(-1, 0, 0));
-                    float disLeftBorder = IntersectionDetection(pI.Position, vecDir,
-                        new Vector3(0, 0, 0), new Vector3(0, 0, -1));
-                    float[] disArr =
-                        {disTopBorder, disBottomBorder, disFrontBorder, disBackBorder, disRightBorder, disLeftBorder};
-                    float tmpMin = Math.Abs(disTopBorder);
-                    float tmpIndex = 0;
-                    float counter = 0;
+                    Vector3[] anchorPoints = {this._containerVolume, new Vector3(0, 0, 0)};
+                    float[] disArr= new float[6];
+                    for (int i = 0; i < 6; ++i) {
+                        if (i < 3) {
+                            disArr[i] = IntersectionDetection(pI.Position, vecDir, anchorPoints[0], normalArr[i]);
+                        } else {
+                            disArr[i] = IntersectionDetection(pI.Position, vecDir, anchorPoints[1], normalArr[i]);
+
+                        }
+                    }
+//                    float disTopBorder = IntersectionDetection(pI.Position, vecDir,
+//                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
+//                        new Vector3(0, 1, 0));
+//                    float disFrontBorder = IntersectionDetection(pI.Position, vecDir,
+//                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
+//                        new Vector3(1, 0, 0));
+//                    float disRightBorder = IntersectionDetection(pI.Position, vecDir,
+//                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
+//                        new Vector3(0, 0, 1));
+//                    float disBottomBorder = IntersectionDetection(pI.Position, vecDir,
+//                        new Vector3(0, 0, 0), new Vector3(0, -1, 0));
+//                    float disBackBorder = IntersectionDetection(pI.Position, vecDir,
+//                        new Vector3(0, 0, 0), new Vector3(-1, 0, 0));
+//                    float disLeftBorder = IntersectionDetection(pI.Position, vecDir,
+//                        new Vector3(0, 0, 0), new Vector3(0, 0, -1));
+//                    float[] disArr =
+//                        {disTopBorder, disBottomBorder, disFrontBorder, disBackBorder, disRightBorder, disLeftBorder};
+                    float tmpMin = Math.Abs(disArr[0]);
+                    int tmpIndex = 0;
+                    int counter = 0;
                     foreach (var val in disArr) {
                         ++counter;
                         if (val > 0 && val < tmpMin) {
@@ -217,11 +228,14 @@ namespace FluidSolver {
                         }
                     }
 
+                    var tmpReflection = Reflection(vecDir, normalArr[tmpIndex]);
+                    pI.Velocity = tmpReflection * pI.Velocity.Length();
                 }
             }
         }
 
         private void UpdatePosition(float inTimeStep) {
+            
             foreach (var pI in this._particleList) {
                 pI.Velocity += pI.TotalAcceleration * inTimeStep;
                 pI.Position += pI.Velocity * inTimeStep;
