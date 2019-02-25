@@ -164,7 +164,7 @@ namespace FluidSolver {
         private float IntersectionDetection(Vector3 inVecPos, Vector3 inVecDir, Vector3 inPlanePoint,
             Vector3 inPlaneNormal) {
             float vecNDotPlaneN = Vector3.Dot(inVecDir, inPlaneNormal);
-            if (Math.Abs(vecNDotPlaneN) <= TOLERANCE) {
+            if (Math.Abs(vecNDotPlaneN) <= 0.001f) {
                 return 0f;
             } else {
                 float tmpValue = Vector3.Dot(inVecDir, inPlanePoint - inVecPos);
@@ -176,6 +176,13 @@ namespace FluidSolver {
             return inVec - 2 * Vector3.Dot(inVec, inNormal) * inNormal;
         }
         private void RestrictionParticles() {
+            Vector3[] normalArr = {
+                new Vector3(0, 1, 0), new Vector3(1, 0, 0),
+                new Vector3(0, 0, 1), new Vector3(0, -1, 0),
+                new Vector3(-1, 0, 0), new Vector3(0, 0, -1)
+            };
+            
+
             foreach (var pI in this._particleList) {
                 bool isOutside = !(0 < pI.Position.X && pI.Position.X < this._containerVolume.X &&
                                    0 < pI.Position.Y && pI.Position.Y < this._containerVolume.Y &&
@@ -209,7 +216,6 @@ namespace FluidSolver {
                             tmpIndex = counter;
                         }
                     }
-                    Vector3[] normalArr = 
 
                 }
             }
