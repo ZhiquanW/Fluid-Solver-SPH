@@ -6,12 +6,14 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Numerics;
 using System.Reflection.Metadata;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.CompilerServices;
 
 namespace FluidSolver {
     public class FluidSolver {
         private FluidDatabase _fluidDatabase;
         private List<Particle> _particleList;
-        private Vector3 _containerVolume;
+        private Vector3 _containerBox;
         private int _particleNum;
         private readonly float _coreRadius; // h
         private float _particleMass; //set particle
@@ -20,30 +22,36 @@ namespace FluidSolver {
         private float _gasConstant; // k 
         private float _tensionCoefficient; //sigma
         private float _gravityAcceleration; //g
-
-        public FluidSolver(Vector3 inContainerVolume, float inCoreRadius,
+        private float _frameNum;
+        private float _timeStep;
+        private float _timeDuration; 
+        public FluidSolver(Vector3 inContainerBox, float inCoreRadius,
                            float inRestDensity,float inViscosityCoefficient,
                            float inGasConstant,float inTensionCoefficient,
-                           float inGravityAcceleration) {
+                           float inGravityAcceleration,float inFrameNum,float inTimeStep) {
             this._particleList = new List<Particle>();
             this._fluidDatabase = new FluidDatabase();
             this._particleNum = 0;
-            this._containerVolume = inContainerVolume; 
+            this._containerBox = inContainerBox; 
             this._coreRadius = inCoreRadius;
             this._restDensity = inRestDensity;
             this._viscosityCoefficient = inViscosityCoefficient;
             this._gasConstant = inGasConstant;
             this._tensionCoefficient = inTensionCoefficient;
             this._gravityAcceleration = inGravityAcceleration;
+            this._frameNum = inFrameNum;
+            this._timeStep = inTimeStep;
+            this._timeDuration = this._frameNum * this._timeStep;
         }
 
-        public void StartImitation(float inFrameNum, float inTimeStep, string inFileName) {
-            this._fluidDatabase.TimeStep = inTimeStep;
-            this._fluidDatabase.TimeDuration = inFrameNum * inTimeStep;
+        public void StartImitation(string inFileName) { 
+            DisplayParameters();
+            this._fluidDatabase.TimeStep = this._timeStep;
+            this._fluidDatabase.TimeDuration = this._timeDuration;
             DateTime startTime = DateTime.Now;
             DateTime endTime = new DateTime();
-            for (int i = 0; i < inFrameNum; ++i) {
-                Console.SetCursorPosition(0, 1);
+            for (int i = 0; i < this._frameNum; ++i) {
+                Console.SetCursorPosition(0, Console.CursorTop-1);
                 RestrictionParticles();
                 ComputeDensity();
                 ComputePressure();
@@ -52,10 +60,10 @@ namespace FluidSolver {
                 ComputeViscosityForceAcceleration();
                 ComputeSurfaceTensionAcceleration();
                 ComputeTotalAcceleration();
-                UpdatePosition(inTimeStep);
+                UpdatePosition(this._timeStep);
                 endTime = DateTime.Now;
                 float runtime = (float) endTime.Subtract(startTime).TotalMilliseconds / 1000;
-                float progressPercentage = (float) (i + 1) / inFrameNum * 100;
+                float progressPercentage = (float) (i + 1) / this._frameNum * 100;
                 float remainingTime = progressPercentage / runtime * (100 - progressPercentage);
                 Console.WriteLine("Progress: " + progressPercentage.ToString("F3") + "% "
                                   + "Runtime: " + runtime.ToString("F3") + "s "
@@ -65,12 +73,13 @@ namespace FluidSolver {
             this._fluidDatabase.Output(inFileName);
         }
 
-        public void InitParticles(Vector3 inParticleVolume, float inParticleInterval, float inParticleMass) {
-            this._particleNum = (int) (inParticleVolume.X * inParticleVolume.Y * inParticleVolume.Z);
+        public void InitParticles(Vector3 inParticleBox, float inParticleInterval, float inParticleMass) {
+            this._particleNum = (int) (inParticleBox.X * inParticleBox.Y * inParticleBox.Z);
+            this._particleMass = inParticleMass;
             int counter = 0;
-            for (int i = 0; i < inParticleVolume.X; ++i) {
-                for (int j = 0; j < inParticleVolume.Y; ++j) {
-                    for (int k = 0; k < inParticleVolume.Z; ++k) {
+            for (int i = 0; i < inParticleBox.X; ++i) {
+                for (int j = 0; j < inParticleBox.Y; ++j) {
+                    for (int k = 0; k < inParticleBox.Z; ++k) {
                         var tmpPos = new Vector3(inParticleInterval * i, inParticleInterval * j,
                             inParticleInterval * k);
                         this._particleList.Add(new Particle(counter++, inParticleMass, tmpPos));
@@ -84,9 +93,10 @@ namespace FluidSolver {
             int counter = 0;
             foreach (var p in this._particleList) {
                 Console.WriteLine(p.Index + " " + p.Position.ToString());
+                Console.WriteLine(p.Velocity);
             }
         }
-
+        
         private void ComputeDensity() {
             float hSquare = this._coreRadius * this._coreRadius;
             float tmpCoefficient = (float) (315 / (64 * Math.PI * Math.Pow(hSquare, 9)));
@@ -103,7 +113,7 @@ namespace FluidSolver {
             }
         }
 
-        public void TestComputeDensity() {
+        public void TestDensity() {
             foreach (var VARIABLE in _particleList) {
                 Console.WriteLine(VARIABLE.Density);
 
@@ -208,12 +218,12 @@ namespace FluidSolver {
             
 
             foreach (var pI in this._particleList) {
-                bool isOutside = !(0 < pI.Position.X && pI.Position.X < this._containerVolume.X &&
-                                   0 < pI.Position.Y && pI.Position.Y < this._containerVolume.Y &&
-                                   0 < pI.Position.Z && pI.Position.Z < this._containerVolume.Z);
+                bool isOutside = !(0 < pI.Position.X && pI.Position.X < this._containerBox.X &&
+                                   0 < pI.Position.Y && pI.Position.Y < this._containerBox.Y &&
+                                   0 < pI.Position.Z && pI.Position.Z < this._containerBox.Z);
                 if (isOutside) {
                     var vecDir = -Vector3.Normalize(pI.Velocity);
-                    Vector3[] anchorPoints = {this._containerVolume, new Vector3(0, 0, 0)};
+                    Vector3[] anchorPoints = {this._containerBox, new Vector3(0, 0, 0)};
                     float[] disArr= new float[6];
                     for (int i = 0; i < 6; ++i) {
                         if (i < 3) {
@@ -223,23 +233,7 @@ namespace FluidSolver {
 
                         }
                     }
-//                    float disTopBorder = IntersectionDetection(pI.Position, vecDir,
-//                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
-//                        new Vector3(0, 1, 0));
-//                    float disFrontBorder = IntersectionDetection(pI.Position, vecDir,
-//                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
-//                        new Vector3(1, 0, 0));
-//                    float disRightBorder = IntersectionDetection(pI.Position, vecDir,
-//                        new Vector3(this._containerVolume.X, this._containerVolume.Y, this._containerVolume.Z),
-//                        new Vector3(0, 0, 1));
-//                    float disBottomBorder = IntersectionDetection(pI.Position, vecDir,
-//                        new Vector3(0, 0, 0), new Vector3(0, -1, 0));
-//                    float disBackBorder = IntersectionDetection(pI.Position, vecDir,
-//                        new Vector3(0, 0, 0), new Vector3(-1, 0, 0));
-//                    float disLeftBorder = IntersectionDetection(pI.Position, vecDir,
-//                        new Vector3(0, 0, 0), new Vector3(0, 0, -1));
-//                    float[] disArr =
-//                        {disTopBorder, disBottomBorder, disFrontBorder, disBackBorder, disRightBorder, disLeftBorder};
+
                     float tmpMin = Math.Abs(disArr[0]);
                     int tmpIndex = 0;
                     int counter = 0;
@@ -267,7 +261,31 @@ namespace FluidSolver {
             this._fluidDatabase.AddParticles(this._particleList);
         }
 
+        public void DisplayParameters() {
+//        private int _particleNum;
+//        private readonly float _coreRadius; // h
+//        private float _particleMass; //set particle
+//        private float _restDensity; // set particle \rho_0
+//        private float _viscosityCoefficient; // mu
+//        private float _gasConstant; // k 
+//        private float _tensionCoefficient; //sigma
+//        private float _gravityAcceleration; //g
 
+            Console.WriteLine("===================="+"Parameters Setting:"+"====================");
+            Console.WriteLine("Particle Number: "+this._particleNum);
+            Console.WriteLine("Particle Mass(m): "+this._particleMass);
+            Console.WriteLine("Frame Number: "+this._frameNum);
+            Console.WriteLine("Time Step: "+this._timeStep);
+            Console.WriteLine("Time Duration: "+this._timeDuration);
+            Console.WriteLine("Container Box: "+this._containerBox);
+            Console.WriteLine("Core Radius(h): "+this._coreRadius);
+            Console.WriteLine("Rest Density(rho_0): "+this._restDensity);
+            Console.WriteLine("Viscosity Coefficient(mu): "+this._viscosityCoefficient);
+            Console.WriteLine("Gas Constant: "+ this._gasConstant);
+            Console.WriteLine("Tension Coefficient(sigma): "+this._tensionCoefficient);
+            Console.WriteLine("Gravity Acceleration Coefficient(g): "+this._gravityAcceleration);
+            Console.WriteLine("====================" + "====================" + "====================");
+        }
 
     }
 
@@ -311,6 +329,9 @@ namespace FluidSolver {
             this.Index = inIndex;
             this.Mass = inMass;
             this.Position = inPosition;
+            this.Density = 0;
+            this.Velocity = new Vector3();
+            this.TotalAcceleration = new Vector3();
         }
 
         public int Index { get; set; } = 0;
