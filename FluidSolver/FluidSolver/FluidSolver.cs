@@ -13,20 +13,28 @@ namespace FluidSolver {
         private List<Particle> _particleList;
         private Vector3 _containerVolume;
         private int _particleNum;
+        private readonly float _coreRadius; // h
         private float _particleMass; //set particle
         private float _restDensity; // set particle \rho_0
         private float _viscosityCoefficient; // mu
-        private readonly float _coreRadius; // h
         private float _gasConstant; // k 
         private float _tensionCoefficient; //sigma
         private float _gravityAcceleration; //g
 
-        public FluidSolver(Vector3 inContainerVolume, float inCoreRadius) {
-            this._containerVolume = inContainerVolume;
+        public FluidSolver(Vector3 inContainerVolume, float inCoreRadius,
+                           float inRestDensity,float inViscosityCoefficient,
+                           float inGasConstant,float inTensionCoefficient,
+                           float inGravityAcceleration) {
             this._particleList = new List<Particle>();
-            this._particleNum = 0;
-            this._coreRadius = inCoreRadius;
             this._fluidDatabase = new FluidDatabase();
+            this._particleNum = 0;
+            this._containerVolume = inContainerVolume; 
+            this._coreRadius = inCoreRadius;
+            this._restDensity = inRestDensity;
+            this._viscosityCoefficient = inViscosityCoefficient;
+            this._gasConstant = inGasConstant;
+            this._tensionCoefficient = inTensionCoefficient;
+            this._gravityAcceleration = inGravityAcceleration;
         }
 
         public void StartImitation(float inFrameNum, float inTimeStep, string inFileName) {
@@ -70,6 +78,14 @@ namespace FluidSolver {
                 }
             }
         }
+        
+        public void TestInitParticles() {
+            Console.WriteLine(this._particleList.Count);
+            int counter = 0;
+            foreach (var p in this._particleList) {
+                Console.WriteLine(p.Index + " " + p.Position.ToString());
+            }
+        }
 
         private void ComputeDensity() {
             float hSquare = this._coreRadius * this._coreRadius;
@@ -84,6 +100,13 @@ namespace FluidSolver {
                 }
 
                 pI.Density = pI.Mass * tmpCoefficient * tmpDensity;
+            }
+        }
+
+        public void TestComputeDensity() {
+            foreach (var VARIABLE in _particleList) {
+                Console.WriteLine(VARIABLE.Density);
+
             }
         }
 
@@ -128,7 +151,7 @@ namespace FluidSolver {
 
         private void ComputeGravityAcceleration() {
             foreach (var pI in this._particleList) {
-                pI.GravityAcceleration = this._gravityAcceleration * new Vector3(0, 0, -1);
+                pI.GravityAcceleration = this._gravityAcceleration * new Vector3(0, -1, 0);
             }
         }
 
@@ -244,19 +267,7 @@ namespace FluidSolver {
             this._fluidDatabase.AddParticles(this._particleList);
         }
 
-        public void TestInitParticles() {
-            Console.WriteLine(this._particleList.Count);
-            int counter = 0;
-            foreach (var p in this._particleList) {
-                Console.WriteLine(p.Index + " " + p.Position.ToString());
-            }
-        }
 
-        public void TestCalDensity() {
-            foreach (var p in this._particleList) {
-                Console.WriteLine(p.Density);
-            }
-        }
 
     }
 
@@ -283,8 +294,9 @@ namespace FluidSolver {
                 foreach (var particleList in this._fluidMatrix) {
                     file.WriteLine(counter.ToString());
                     foreach (var pI in particleList) {
-                        file.WriteLine(pI.ToString()); 
+                        file.WriteLine(pI.ToString());
                     }
+                    counter++;
                 }
             }
         }
