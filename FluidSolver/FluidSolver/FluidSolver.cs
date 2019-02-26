@@ -51,8 +51,7 @@ namespace FluidSolver {
             DateTime startTime = DateTime.Now;
             DateTime endTime = new DateTime();
             for (int i = 0; i < this._frameNum; ++i) {
-                Console.SetCursorPosition(0, Console.CursorTop-1);
-                RestrictionParticles();
+                
                 ComputeDensity();
                 ComputePressure();
                 ComputeGravityAcceleration();
@@ -60,14 +59,19 @@ namespace FluidSolver {
                 ComputeViscosityForceAcceleration();
                 ComputeSurfaceTensionAcceleration();
                 ComputeTotalAcceleration();
+                RestrictionParticles();
                 UpdatePosition(this._timeStep);
+                
+                //Display Computing Progress
+                
                 endTime = DateTime.Now;
                 float runtime = (float) endTime.Subtract(startTime).TotalMilliseconds / 1000;
                 float progressPercentage = (float) (i + 1) / this._frameNum * 100;
                 float remainingTime = progressPercentage / runtime * (100 - progressPercentage);
+                Console.SetCursorPosition(0, Console.CursorTop-1);
                 Console.WriteLine("Progress: " + progressPercentage.ToString("F3") + "% "
                                   + "Runtime: " + runtime.ToString("F3") + "s "
-                                  + "EstimatedTime: " + remainingTime.ToString("F3") + "s ");
+                                  + "EstimatedTime: " + remainingTime.ToString("F3") + "s");
             }
 
             this._fluidDatabase.Output(inFileName);
@@ -99,10 +103,11 @@ namespace FluidSolver {
         
         private void ComputeDensity() {
             float hSquare = this._coreRadius * this._coreRadius;
-            float tmpCoefficient = (float) (315 / (64 * Math.PI * Math.Pow(hSquare, 9)));
+            float tmpCoefficient = (float) (315 / (64 * Math.PI * Math.Pow(this._coreRadius, 9)));
+            List<Particle> preParticleList = this._particleList;
             foreach (var pI in this._particleList) {
                 float tmpDensity = 0;
-                foreach (var pJ in this._particleList) {
+                foreach (var pJ in preParticleList) {
                     float tmpDisSqu = Vector3.DistanceSquared(pI.Position, pJ.Position);
                     if (tmpDisSqu < hSquare) {
                         tmpDensity += (float) Math.Pow(hSquare - tmpDisSqu, 3);
@@ -110,6 +115,8 @@ namespace FluidSolver {
                 }
 
                 pI.Density = pI.Mass * tmpCoefficient * tmpDensity;
+//                Console.WriteLine(Vector3.DistanceSquared(pI.Position, pI.Position));
+//                Console.WriteLine(pI.Mass + " " + tmpCoefficient + " " + tmpDensity);
             }
         }
 
@@ -121,16 +128,20 @@ namespace FluidSolver {
         }
 
         private void ComputePressure() {
+            int a = 1;
             foreach (var p in this._particleList) {
                 p.Pressure = this._gasConstant * (p.Density - _restDensity);
+//                Console.WriteLine("Density: "+ p.Density+" - Pressure: "+p.Pressure);
             }
+            
         }
 
         private void ComputePressureForceAcceleration() {
             float tmpCoefficient = (float) (45 / (Math.PI * Math.Pow(this._coreRadius, 6)));
+            List<Particle> preParticleList = this._particleList;
             foreach (var pI in this._particleList) {
                 var tmpVec = new Vector3();
-                foreach (var pJ in this._particleList) {
+                foreach (var pJ in preParticleList) {
                     float tmpDis = Vector3.Distance(pI.Position, pJ.Position);
                     if (tmpDis < this._coreRadius) {
                         tmpVec += (float) ((pI.Pressure + pJ.Pressure) / (2 * pI.Density * pJ.Density) *
@@ -140,15 +151,18 @@ namespace FluidSolver {
                 }
 
                 pI.PressureForceAcceleration = pI.Mass * tmpCoefficient * tmpVec;
+                Console.WriteLine(pI.PressureForceAcceleration);
             }
         }
 
         private void ComputeViscosityForceAcceleration() {
             float tmpCoefficient =
                 (float) (this._viscosityCoefficient * 45 / (Math.PI * Math.Pow(this._coreRadius, 6)));
+            List<Particle> preParticleList = this._particleList;
+
             foreach (var pI in this._particleList) {
                 var tmpVec = new Vector3();
-                foreach (var pJ in this._particleList) {
+                foreach (var pJ in preParticleList) {
                     float tmpDis = Vector3.Distance(pI.Position, pJ.Position);
                     if (tmpDis < this._coreRadius) {
                         tmpVec += (pI.Velocity - pJ.Velocity) / (pI.Density * pJ.Density) * this._coreRadius * tmpDis;
@@ -169,10 +183,12 @@ namespace FluidSolver {
             float tmpCoefficient = (float) (-945 / (32 * Math.PI * Math.Pow(this._coreRadius, 9)));
             float tmpCoefficientLaplacian = (float) (945 / (8 * Math.PI * Math.Pow(this._coreRadius, 9)));
             float hSquared = (float) Math.Pow(this._coreRadius, 2);
+            List<Particle> preParticleList = this._particleList;
+
             foreach (var pI in this._particleList) {
                 Vector3 colorFieldGradient = new Vector3();
                 float colorFieldLaplacian = 0;
-                foreach (var pJ in this._particleList) {
+                foreach (var pJ in preParticleList) {
                     float rSquared = Vector3.DistanceSquared(pI.Position, pJ.Position);
                     float tmpDis = Vector3.Distance(pI.Position, pJ.Position);
                     if (tmpDis < this._coreRadius) {
@@ -284,7 +300,7 @@ namespace FluidSolver {
             Console.WriteLine("Gas Constant: "+ this._gasConstant);
             Console.WriteLine("Tension Coefficient(sigma): "+this._tensionCoefficient);
             Console.WriteLine("Gravity Acceleration Coefficient(g): "+this._gravityAcceleration);
-            Console.WriteLine("====================" + "====================" + "====================");
+            Console.WriteLine("====================" + "====================" + "====================\n");
         }
 
     }
