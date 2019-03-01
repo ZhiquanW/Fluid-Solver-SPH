@@ -3,8 +3,22 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Numerics;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace FluidSolver {
+
+    public class CloneObject {
+        public static List<T> Clone<T>(List<T> objectList) {
+            using (Stream objStream = new MemoryStream()) {
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(objStream, objectList);
+                objStream.Seek(0, SeekOrigin.Begin);
+                return (List<T>) formatter.Deserialize(objStream);
+            }
+        }
+    }
+
     public class FluidSolver {
         private FluidDatabase _fluidDatabase;
         private List<Particle> _particleList;
@@ -19,14 +33,15 @@ namespace FluidSolver {
         private float _gravityAcceleration; //g
         private float _frameNum;
         private float _timeStep;
-        private float _timeDuration; 
-        
+        private float _timeDuration;
+
+       
+
         public FluidSolver(Vector3 inContainerBox, float inCoreRadius,
                            float inRestDensity,float inViscosityCoefficient,
                            float inGasConstant,float inTensionCoefficient,
                            float inGravityAcceleration,float inFrameNum,float inTimeStep) {
             _particleList = new List<Particle>();
-
             _particleNum = 0;
             _containerBox = inContainerBox; 
             _coreRadius = inCoreRadius;
@@ -47,12 +62,10 @@ namespace FluidSolver {
             _fluidDatabase.TimeStep = _timeStep;
             _fluidDatabase.TimeDuration = _timeDuration;
             _fluidDatabase.FileName = inFileName;
-
             _fluidDatabase.OutputTitle(_timeDuration,_timeDuration);
             DateTime startTime = DateTime.Now;
             InitParticles(new Vector3(10, 10, 10), 0.001f, 0.0004f);
             for (int i = 0; i < _frameNum; ++i) {
-                
                 ComputeDensity();
                 ComputePressure();
                 ComputeGravityAcceleration();
@@ -64,7 +77,6 @@ namespace FluidSolver {
                 UpdatePosition(i+1,_timeStep);
                 
                 //Display Computing Progress
-                
                 var endTime = DateTime.Now;
                 float runtime = (float) endTime.Subtract(startTime).TotalMilliseconds / 1000;
                 float progressPercentage = (i + 1) / _frameNum * 100;
@@ -79,7 +91,6 @@ namespace FluidSolver {
         }
 
         public void InitParticles(Vector3 inParticleBox, float inParticleInterval, float inParticleMass) {
-           
             _particleNum = (int) (inParticleBox.X * inParticleBox.Y * inParticleBox.Z);
             _particleMass = inParticleMass;
             int counter = 0;
@@ -106,7 +117,7 @@ namespace FluidSolver {
         private void ComputeDensity() {
             float hSquare = _coreRadius * _coreRadius;
             float tmpCoefficient = (float) (315 / (64 * Math.PI * Math.Pow(_coreRadius, 9)));
-            List<Particle> preParticleList = new List<Particle>(_particleList);
+            List<Particle> preParticleList = CloneObject.Clone(this._particleList);
             foreach (var pI in _particleList) {
                 float tmpDensity = 0;
                 foreach (var pJ in preParticleList) {
@@ -143,7 +154,7 @@ namespace FluidSolver {
 
         private void ComputePressureForceAcceleration() {
             float tmpCoefficient = (float) (45 / (Math.PI * Math.Pow(_coreRadius, 6)));
-            List<Particle> preParticleList = new List<Particle>(_particleList);
+            List<Particle> preParticleList = CloneObject.Clone(this._particleList);
             foreach (var pI in _particleList) {
                 var tmpVec = new Vector3();
                 foreach (var pJ in preParticleList) {
@@ -166,8 +177,7 @@ namespace FluidSolver {
         private void ComputeViscosityForceAcceleration() {
             float tmpCoefficient =
                 (float) (_viscosityCoefficient * 45 / (Math.PI * Math.Pow(_coreRadius, 6)));
-            List<Particle> preParticleList = new List<Particle>(_particleList);
-
+            List<Particle> preParticleList = CloneObject.Clone(this._particleList);
             foreach (var pI in _particleList) {
                 var tmpVec = new Vector3();
                 foreach (var pJ in preParticleList) {
@@ -195,12 +205,12 @@ namespace FluidSolver {
             float tmpCoefficient = (float) (-945 / (32 * Math.PI * Math.Pow(_coreRadius, 9)));
             float tmpCoefficientLaplacian = (float) (945 / (8 * Math.PI * Math.Pow(_coreRadius, 9)));
             float hSquared = (float) Math.Pow(_coreRadius, 2);
-
+            List<Particle> preParticleList = CloneObject.Clone(this._particleList);
             foreach (var pI in _particleList) {
                 Vector3 colorFieldGradient = new Vector3();
                 float colorFieldLaplacian = 0;
                 
-                foreach (var pJ in _particleList) {
+                foreach (var pJ in preParticleList) {
                     if (pI.Index == pJ.Index) {
                         continue;
                     }
@@ -367,44 +377,43 @@ namespace FluidSolver {
 
     }
 
+    [Serializable]
     public class Particle {
-        public Particle() {
+        public Particle(Particle inIndex) {
 
         }
 
-        public Particle(int inIndex, float inMass, Vector3 inPosition) {
+        public Particle(int inIndex) {
             Index = inIndex;
-            Mass = inMass;
-            Position = inPosition;
-            Density = 0;
-            Velocity = new Vector3();
-            TotalAcceleration = new Vector3();
         }
 
+        public AddSection(float inMass,Vector3 inPosition,
+                          float inDensity,float inPressure,
+                          float in)
         public int Index { get; set; }
 
-        public float Mass { get; }
+        public List<float> Mass { get; }
 
-        public Vector3 Position { get; set; }
+        public List<Vector3> Position { get; set; }
 
-        public float Density { get; set; }
+        public List<float> Density { get; set; }
 
-        public float Pressure { get; set; }
+        public List<float> Pressure { get; set; }
 
-        public Vector3 Velocity { get; set; }
+        public List<Vector3> Velocity { get; set; }
 
-        public Vector3 TotalAcceleration { get; set; }
+        public List<Vector3> TotalAcceleration { get; set; }
 
-        public Vector3 PressureForceAcceleration { get; set; }
+        public List<Vector3> PressureForceAcceleration { get; set; }
 
-        public Vector3 ViscosityForceAcceleration { get; set; }
+        public List<Vector3> ViscosityForceAcceleration { get; set; }
 
-        public Vector3 GravityAcceleration { get; set; }
+        public List<Vector3> GravityAcceleration { get; set; }
 
-        public Vector3 SurfaceTensionAcceleration { get; set; }
+        public List<Vector3> SurfaceTensionAcceleration { get; set; }
 
-        public override string ToString() {
-            return Index+ " " +Position.Z+" "+Position.Y+" "+Position.Z;
+        public string ParticleToString(int index) {
+            return Index+ " " +Position[index].Z+" "+Position[index].Y+" "+Position[index].Z;
         }
     }
 }
