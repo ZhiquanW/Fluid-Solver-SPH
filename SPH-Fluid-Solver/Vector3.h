@@ -19,7 +19,7 @@ public:
 
     Vector3(double, double, double);
 
-    inline void setVector(double, double, double);
+    inline void set_vector(double, double, double);
 
     inline double x() const;
 
@@ -63,8 +63,22 @@ public:
 
 };
 
+Vector3::Vector3() = default;
 
-inline void Vector3::setVector(double _p0, double _p1, double _p2) {
+Vector3::Vector3(const Vector3 &_v) {
+    for (int i = 0; i < 3; ++i) {
+        this->vec3[i] = _v[i];
+    }
+}
+
+Vector3::Vector3(double _n0, double _n1, double _n2) {
+    this->vec3[0] = _n0;
+    this->vec3[1] = _n1;
+    this->vec3[2] = _n2;
+}
+
+
+inline void Vector3::set_vector(double _p0, double _p1, double _p2) {
     vec3[0] = _p0;
     vec3[1] = _p1;
     vec3[2] = _p2;

@@ -84,6 +84,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/FluidDatabase.h">
+			<Option target="SPH_Fluid_Solver"/>
+		</Unit>
+		<Unit filename="/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/Particle.h">
+			<Option target="SPH_Fluid_Solver"/>
+		</Unit>
 		<Unit filename="/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/main.cpp">
 			<Option target="SPH_Fluid_Solver"/>
 		</Unit>

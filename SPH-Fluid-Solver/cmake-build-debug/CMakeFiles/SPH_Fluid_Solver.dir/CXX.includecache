@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/Vector3.h
+iostream
+-
+cmath
+-
+
+/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/main.cpp
+iostream
+-
+Vector3.h
+/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/Vector3.h
+
