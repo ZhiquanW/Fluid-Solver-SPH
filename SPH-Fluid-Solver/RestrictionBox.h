@@ -25,41 +25,58 @@ public:
         front_back_detection[0] = vertex0.z();
         front_back_detection[1] = vertex1.z();
     }
+    void restrict_particle(Particle & in_particle){
+        if(detect_restriction(in_particle.get_position())){
+            vec3 normal_arr[6] = {vec3(-1, 0, 0), vec3(1, 0, 0),
+                                  vec3(0, -1, 0), vec3(0, 1, 0),
+                                  vec3(0, 0, -1), vec3(0, 0, 1)};
+            vec3 points_arr[6] = {vec3(0, 0, 0),
+                                  vec3(left_right_detection[1], bottom_top_detection[1], front_back_detection[1])};
+            for (size_t i = 0; i < 6; ++i) {
+                double tmp_dis = 0;
+                bool is_intersected = intersect_detection(in_particle.get_position(),
+                                                          in_particle.get_velocity().normalize(),
+                                                          normal_arr[i], points_arr[i], tmp_dis);
+                if(is_intersected){
+                    vec3 tmp_point = in_particle.get_position() + tmp_dis * in_particle.get_velocity().normalize();
+                    if(detect_restriction(tmp_point)){
+                        continue;
+                    }else{
+                        in_particle.set_velocity(reflect_vector(in_particle.get_velocity(),normal_arr[i]));
+                        return;
+                    }
+                }
 
-    bool detect_restriction(const Particle &in_particle) {
-        bool is_outside = false;
-        if (left_right_detection[0] > in_particle.get_position().x() ||
-            left_right_detection[1] < in_particle.get_position().x() ||
-            bottom_top_detection[0] > in_particle.get_position().y() ||
-            bottom_top_detection[1] < in_particle.get_position().y() ||
-            front_back_detection[0] > in_particle.get_position().z() ||
-            front_back_detection[1] < in_particle.get_position().z()) {
-            is_outside = true;
-        } else {
-            return false;
+            }
         }
-        vec3 normal_arr[6] = {vec3(-1, 0, 0), vec3(1, 0, 0),
-                              vec3(0, -1, 0), vec3(0, 1, 0),
-                              vec3(0, 0, -1), vec3(0, 0, 1)};
-        
-        return true;
-
     }
 
+
 private:
-    double intersection_detection(const vec3 &in_vec_pos,const vec3 &in_vec_dir,
-                                  const vec3 &in_plane_point,const vec3 &in_plane_dir) {
-        double vec_dot_plane_n = dot(in_vec_dir,in_plane_dir);
-        if(fabs(vec_dot_plane_n) <= 0.001f){
-            return 0;
+
+    bool detect_restriction(const vec3 &in_pos) {
+        return left_right_detection[0] >= in_pos.x() ||
+               left_right_detection[1] <= in_pos.x() ||
+               bottom_top_detection[0] >= in_pos.y() ||
+               bottom_top_detection[1] <= in_pos.y() ||
+               front_back_detection[0] >= in_pos.z() ||
+               front_back_detection[1] <= in_pos.z();
+    }
+    bool intersect_detection(const vec3 &in_vec_pos, const vec3 &in_vec_dir,
+                             const vec3 &in_plane_point, const vec3 &in_plane_dir,
+                             double &in_dis) {
+        double vec_dot_plane_n = dot(in_vec_dir, in_plane_dir);
+        if (fabs(vec_dot_plane_n) <= 0.001f) {
+            return false;
         }
-        if(in_vec_pos.x() == in_plane_point.x() &&
-           in_vec_pos.y() == in_plane_point.y() &&
-           in_vec_pos.z() == in_plane_point.z()){
-            return 0;
-        }
-        double tmp_value = dot(in_vec_dir,in_plane_dir-in_vec_pos);
-        return tmp_value/vec_dot_plane_n;
+
+        double tmp_value = dot(in_vec_dir, in_plane_dir - in_vec_pos);
+        in_dis = tmp_value / vec_dot_plane_n;
+        return in_dis >= 0;
+    }
+
+    vec3 reflect_vector(const vec3 &in_vec, const vec3 &in_normal) {
+        return in_vec - 2 * dot(in_vec, in_normal) * in_normal;
     }
 
 };
