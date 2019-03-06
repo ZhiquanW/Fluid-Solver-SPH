@@ -14,7 +14,6 @@
 #include <vector>
 #include <fstream>
 #include <algorithm>
-#include "Vector3.h"
 #include "Particle.h"
 
 using namespace std;

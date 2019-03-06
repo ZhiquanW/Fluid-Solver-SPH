@@ -32,59 +32,59 @@ public:
         Particle::index = index;
     }
 
-    const Vector3 &get_position() const {
+    const vec3 &get_position() const {
         return position;
     }
 
-    void set_position(const Vector3 &position) {
+    void set_position(const vec3 &position) {
         Particle::position = position;
     }
 
-    const Vector3 &get_velocity() const {
+    const vec3 &get_velocity() const {
         return velocity;
     }
 
-    void set_velocity(const Vector3 &velocity) {
+    void set_velocity(const vec3 &velocity) {
         Particle::velocity = velocity;
     }
 
-    const Vector3 &get_acceleration() const {
+    const vec3 &get_acceleration() const {
         return acceleration;
     }
 
-    void set_acceleration(const Vector3 &acceleration) {
+    void set_acceleration(const vec3 &acceleration) {
         Particle::acceleration = acceleration;
     }
 
-    const Vector3 &get_gravity_acceleration() const {
+    const vec3 &get_gravity_acceleration() const {
         return gravity_acceleration;
     }
 
-    void set_gravity_acceleration(const Vector3 &gravity_acceleration) {
+    void set_gravity_acceleration(const vec3 &gravity_acceleration) {
         Particle::gravity_acceleration = gravity_acceleration;
     }
 
-    const Vector3 &get_pressure_acceleration() const {
+    const vec3 &get_pressure_acceleration() const {
         return pressure_acceleration;
     }
 
-    void set_pressure_acceleration(const Vector3 &pressure_acceleration) {
+    void set_pressure_acceleration(const vec3 &pressure_acceleration) {
         Particle::pressure_acceleration = pressure_acceleration;
     }
 
-    const Vector3 &get_viscosity_acceleration() const {
+    const vec3 &get_viscosity_acceleration() const {
         return viscosity_acceleration;
     }
 
-    void set_viscosity_acceleration(const Vector3 &viscosity_acceleration) {
+    void set_viscosity_acceleration(const vec3 &viscosity_acceleration) {
         Particle::viscosity_acceleration = viscosity_acceleration;
     }
 
-    const Vector3 &get_surface_tension_acceleration() const {
+    const vec3 &get_surface_tension_acceleration() const {
         return surface_tension_acceleration;
     }
 
-    void set_surface_tension_acceleration(const Vector3 &surface_tension_acceleration) {
+    void set_surface_tension_acceleration(const vec3 &surface_tension_acceleration) {
         Particle::surface_tension_acceleration = surface_tension_acceleration;
     }
 

@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Vector3.h"
-#define vec3 Vector3
+#define vec3 vec
 using namespace std;
 
 int main() {
