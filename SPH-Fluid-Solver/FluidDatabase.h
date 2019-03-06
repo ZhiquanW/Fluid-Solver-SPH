@@ -33,14 +33,15 @@ public:
     explicit FluidDatabase(string file_name, size_t particle_num, size_t frame_num, size_t frame_interval)
             : file_name(std::move(file_name)), particle_num(particle_num), frame_num(frame_num),
               frame_interval(frame_interval) {
-        this->animation_duration = frame_num*frame_interval;
+        this->animation_duration = frame_num * frame_interval;
 
         particle_matrix.resize(frame_num);
-        for(auto &list:this->particle_matrix){
+        for (auto &list:this->particle_matrix) {
             list.resize(particle_num);
         }
     }
-    void append_particle(size_t frame_index,vector<Particle> in_particle_list){
+
+    void append_particle_list(size_t frame_index, vector<Particle> in_particle_list) {
         particle_matrix[frame_index] = std::move(in_particle_list);
     }
 
@@ -50,12 +51,11 @@ public:
         fout << file_name << endl;
         fout << particle_num << " " << frame_num << " " << frame_interval << " " << frame_interval << " "
              << animation_duration << endl;
-        for (size_t i = 0; i < frame_num; ++i) {
-            fout << i << endl;
-            for (const auto &list:this->particle_matrix) {
-                for (const auto &p:list) {
-                    fout << p.get_position() << endl;
-                }
+        int counter = -1;
+        for (const auto &list:this->particle_matrix) {
+            fout << ++counter << endl;
+            for (const auto &p:list) {
+                fout << p.get_position() << endl;
             }
         }
     }
