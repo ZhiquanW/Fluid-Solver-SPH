@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include <utility>
+
 //
 // Created by zhiquan on 3/5/19.
 //
@@ -38,6 +40,9 @@ public:
         for(auto &list:this->particle_matrix){
             list.resize(particle_num);
         }
+    }
+    void append_particle(size_t frame_index,vector<Particle> in_particle_list){
+        particle_matrix[frame_index] = std::move(in_particle_list);
     }
 
     void export_database() {
