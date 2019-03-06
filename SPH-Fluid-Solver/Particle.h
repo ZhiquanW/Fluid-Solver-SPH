@@ -7,9 +7,10 @@
 
 #include "Vector3.h"
 #define vec3 Vector3
+
 class Particle {
 private:
-    size_t index;
+    size_t index{};
     vec3 position;
     vec3 velocity;
     vec3 acceleration;
@@ -20,11 +21,7 @@ private:
 public:
     Particle() = default;
 
-    explicit Particle(const size_t &index):index(index){
-    }
-
-    const Vector3 &get_position() const {
-        return position;
+    explicit Particle(const size_t &index):index(index) {
     }
 
     size_t get_index() const {
@@ -35,6 +32,9 @@ public:
         Particle::index = index;
     }
 
+    const Vector3 &get_position() const {
+        return position;
+    }
 
     void set_position(const Vector3 &position) {
         Particle::position = position;
