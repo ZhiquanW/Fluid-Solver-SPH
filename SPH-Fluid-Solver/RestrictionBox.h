@@ -18,6 +18,7 @@ private:
     double bottom_top_detection[2]{};
 public:
     RestrictionBox(const vec3 &vertex0, const vec3 &vertex1) {
+        cout << vertex0 << " " << vertex1 << endl;
         left_right_detection[0] = vertex0.x();
         left_right_detection[1] = vertex1.x();
         bottom_top_detection[0] = vertex0.y();
@@ -32,23 +33,26 @@ public:
                                   vec3(0, 1, 0), vec3(0, -1, 0),
                                   vec3(0, 0, 1), vec3(0, 0, -1)};
             vec3 points_arr[6] = {vec3(left_right_detection[0], bottom_top_detection[0], front_back_detection[0]),
-                                  vec3(left_right_detection[1], bottom_top_detection[1], front_back_detection[1])};
+                                  vec3(left_right_detection[1], bottom_top_detection[1], front_back_detection[1]),
+                                  vec3(left_right_detection[0], bottom_top_detection[0], front_back_detection[0]),
+                                  vec3(left_right_detection[1], bottom_top_detection[1], front_back_detection[1]),
+                                  vec3(left_right_detection[0], bottom_top_detection[0], front_back_detection[0]),
+                                  vec3(left_right_detection[1], bottom_top_detection[1], front_back_detection[1])};;
+            double nearest_dis = -MAXFLOAT;//non-positive
+            size_t nearest_index = 0;
             for (size_t i = 0; i < 6; ++i) {
                 double tmp_dis = 0;
                 bool is_intersected = intersect_detection(in_particle.get_position(),
                                                           in_particle.get_velocity().normalize(),
                                                           points_arr[i], normal_arr[i], tmp_dis);
-                if (is_intersected) {
-                    vec3 tmp_point = in_particle.get_position() + tmp_dis * in_particle.get_velocity().normalize();
-                    if (detect_restriction(tmp_point)) {
-                        continue;
-                    } else {
-                        in_particle.set_velocity(reflect_vector(in_particle.get_velocity(), normal_arr[i]));
-                        return;
-                    }
-                }
 
+                if (is_intersected && tmp_dis > nearest_dis) {
+                    nearest_dis = tmp_dis;
+                    nearest_index = i;
+                }
             }
+            in_particle.set_velocity(reflect_vector(in_particle.get_velocity(), normal_arr[nearest_index]));
+
         }
     }
 
@@ -73,8 +77,9 @@ private:
             return false;
         }
 
-        double tmp_value = dot(in_vec_dir, in_plane_point - in_vec_pos);
+        double tmp_value = dot(in_plane_dir, in_plane_point - in_vec_pos);
         in_dis = tmp_value / vec_dot_plane_n;
+        cout << in_vec_pos + in_dis * in_vec_dir << endl;
         return in_dis <= 0;
     }
 
