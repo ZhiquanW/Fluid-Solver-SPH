@@ -23,14 +23,14 @@ private:
     string file_name;
     size_t particle_num{};
     size_t frame_num{};
-    size_t frame_interval{};
+    double frame_interval{};
     size_t animation_duration{};
     vector<vector<Particle>> particle_matrix;
 public:
 
     FluidDatabase() = default;
 
-    explicit FluidDatabase(string file_name, size_t particle_num, size_t frame_num, size_t frame_interval)
+    explicit FluidDatabase(string file_name, size_t particle_num, size_t frame_num, double frame_interval)
             : file_name(std::move(file_name)), particle_num(particle_num), frame_num(frame_num),
               frame_interval(frame_interval) {
         this->animation_duration = frame_num * frame_interval;
