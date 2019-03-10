@@ -39,14 +39,16 @@ public:
                                   vec3(left_right_detection[0], bottom_top_detection[0], front_back_detection[0]),
                                   vec3(left_right_detection[1], bottom_top_detection[1], front_back_detection[1])};;
             double nearest_dis = -MAXFLOAT;//non-positive
-            size_t nearest_index = 0;
-            for (size_t i = 0; i < 6; ++i) {
+            int nearest_index = -1;
+            for (int i = 0; i < 6; ++i) {
                 double tmp_dis = 0;
                 bool is_intersected = intersect_detection(in_particle.get_position(),
                                                           in_particle.get_velocity().normalize(),
                                                           points_arr[i], normal_arr[i], tmp_dis);
-
-                if (is_intersected && tmp_dis > nearest_dis) {
+                cout << "tmp dis" << tmp_dis << endl;
+                vec3 tmp_vec1 = in_particle.get_position() + tmp_dis * in_particle.get_velocity().normalize();
+                if (is_intersected && tmp_dis > nearest_dis &&
+                    !detect_restriction(in_particle.get_position() + tmp_dis * in_particle.get_velocity())) {
                     nearest_dis = tmp_dis;
                     nearest_index = i;
                 }
@@ -56,16 +58,18 @@ public:
         }
     }
 
-
+    vec3 reflect_vector(const vec3 &in_vec, const vec3 &in_normal) {
+        return in_vec - 2 * dot( in_vec, in_normal) * in_normal;
+    }
 private:
 
     bool detect_restriction(const vec3 &in_pos) {
-        return left_right_detection[0] >= in_pos.x() ||
-               left_right_detection[1] <= in_pos.x() ||
-               bottom_top_detection[0] >= in_pos.y() ||
-               bottom_top_detection[1] <= in_pos.y() ||
-               front_back_detection[0] >= in_pos.z() ||
-               front_back_detection[1] <= in_pos.z();
+        return left_right_detection[0] > in_pos.x() ||
+               left_right_detection[1] < in_pos.x() ||
+               bottom_top_detection[0] > in_pos.y() ||
+               bottom_top_detection[1] < in_pos.y() ||
+               front_back_detection[0] > in_pos.z() ||
+               front_back_detection[1] < in_pos.z();
     }
 
     bool intersect_detection(const vec3 &in_vec_pos, const vec3 &in_vec_dir,
@@ -83,9 +87,7 @@ private:
         return in_dis <= 0;
     }
 
-    vec3 reflect_vector(const vec3 &in_vec, const vec3 &in_normal) {
-        return -1 * in_vec - 2 * dot(-1 * in_vec, in_normal) * in_normal;
-    }
+
 
 };
 
