@@ -18,7 +18,7 @@ private:
     double bottom_top_detection[2]{};
 public:
     RestrictionBox(const vec3 &vertex0, const vec3 &vertex1) {
-        cout << vertex0 << " " << vertex1 << endl;
+//        cout << vertex0 << " " << vertex1 << endl;
         left_right_detection[0] = vertex0.x();
         left_right_detection[1] = vertex1.x();
         bottom_top_detection[0] = vertex0.y();
@@ -45,7 +45,7 @@ public:
                 bool is_intersected = intersect_detection(in_particle.get_position(),
                                                           in_particle.get_velocity().normalize(),
                                                           points_arr[i], normal_arr[i], tmp_dis);
-                cout << "tmp dis" << tmp_dis << endl;
+//                cout << "tmp dis" << tmp_dis << endl;
                 vec3 tmp_vec1 = in_particle.get_position() + tmp_dis * in_particle.get_velocity().normalize();
                 if (is_intersected && tmp_dis > nearest_dis &&
                     !detect_restriction(in_particle.get_position() + tmp_dis * in_particle.get_velocity())) {
@@ -83,7 +83,7 @@ private:
 
         double tmp_value = dot(in_plane_dir, in_plane_point - in_vec_pos);
         in_dis = tmp_value / vec_dot_plane_n;
-        cout << in_vec_pos + in_dis * in_vec_dir << endl;
+//        cout << in_vec_pos + in_dis * in_vec_dir << endl;
         return in_dis <= 0;
     }
 

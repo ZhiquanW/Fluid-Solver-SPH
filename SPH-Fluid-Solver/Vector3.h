@@ -11,35 +11,35 @@
 
 class Vector3 {
 private:
-    double vec3[3]{};
+    double_t vec3[3]{};
 public:
     Vector3();
 
     Vector3(const Vector3 &);
 
-    Vector3(double, double, double);
+    Vector3(double_t, double_t, double_t);
 
-    inline void set_vector(double, double, double);
+    inline void set_vector(double_t, double_t, double_t);
 
-    inline double x() const;
+    inline double_t x() const;
 
-    inline double y() const;
+    inline double_t y() const;
 
-    inline double z() const;
+    inline double_t z() const;
 
-    inline double r() const;
+    inline double_t r() const;
 
-    inline double g() const;
+    inline double_t g() const;
 
-    inline double b() const;
+    inline double_t b() const;
 
     inline const Vector3 &operator+() const;
 
     inline Vector3 operator-();
 
-    inline double operator[](int) const;
+    inline double_t operator[](int) const;
 
-    inline double &operator[](int);
+    inline double_t &operator[](int);
 
     inline Vector3 &operator+=(const Vector3 &);
 
@@ -47,20 +47,23 @@ public:
 
     inline Vector3 &operator*=(const Vector3 &);
 
-    inline Vector3 &operator*=(const double &);
+    inline Vector3 &operator*=(const double_t &);
 
     inline Vector3 &operator/=(const Vector3 &);
 
-    inline Vector3 &operator/=(const double &);
+    inline Vector3 &operator/=(const double_t &);
 
     inline bool operator==(const Vector3 &);
 
     inline bool operator!=(const Vector3 &);
 
-    inline double length() const;
+    inline double_t length() const;
+
+    inline double_t distance() const;
+
+    inline double_t squared_distance() const;
 
     inline Vector3 normalize() const;
-
 };
 
 Vector3::Vector3() = default;
@@ -71,40 +74,40 @@ Vector3::Vector3(const Vector3 &_v) {
     }
 }
 
-Vector3::Vector3(double _n0, double _n1, double _n2) {
+Vector3::Vector3(double_t _n0, double_t _n1, double_t _n2) {
     this->vec3[0] = _n0;
     this->vec3[1] = _n1;
     this->vec3[2] = _n2;
 }
 
 
-inline void Vector3::set_vector(double _p0, double _p1, double _p2) {
+inline void Vector3::set_vector(double_t _p0, double_t _p1, double_t _p2) {
     vec3[0] = _p0;
     vec3[1] = _p1;
     vec3[2] = _p2;
 }
 
-inline double Vector3::x() const {
+inline double_t Vector3::x() const {
     return this->vec3[0];
 }
 
-inline double Vector3::y() const {
+inline double_t Vector3::y() const {
     return this->vec3[1];
 }
 
-inline double Vector3::z() const {
+inline double_t Vector3::z() const {
     return this->vec3[2];
 }
 
-inline double Vector3::r() const {
+inline double_t Vector3::r() const {
     return this->vec3[0];
 }
 
-inline double Vector3::g() const {
+inline double_t Vector3::g() const {
     return this->vec3[1];
 }
 
-inline double Vector3::b() const {
+inline double_t Vector3::b() const {
     return this->vec3[2];
 }
 
@@ -116,11 +119,11 @@ inline Vector3 Vector3::operator-() {
     return Vector3(-1 * this->vec3[0], -1 * this->vec3[1], -1 * this->vec3[2]);
 }
 
-inline double Vector3::operator[](int _i) const {
+inline double_t Vector3::operator[](int _i) const {
     return this->vec3[_i];
 }
 
-inline double &Vector3::operator[](int _i) {
+inline double_t &Vector3::operator[](int _i) {
     return this->vec3[_i];
 }
 
@@ -145,8 +148,8 @@ inline Vector3 &Vector3::operator*=(const Vector3 &_v) {
     return *this;
 }
 
-inline Vector3 &Vector3::operator*=(const double &_d) {
-    for (double &data : this->vec3) {
+inline Vector3 &Vector3::operator*=(const double_t &_d) {
+    for (double_t &data : this->vec3) {
         data *= _d;
     }
     return *this;
@@ -159,26 +162,33 @@ inline Vector3 &Vector3::operator/=(const Vector3 &_v) {
     return *this;
 }
 
-inline Vector3 &Vector3::operator/=(const double &_d) {
-    for (double &data : this->vec3) {
+inline Vector3 &Vector3::operator/=(const double_t &_d) {
+    for (double_t &data : this->vec3) {
         data /= _d;
     }
     return *this;
 }
 
-inline double Vector3::length() const {
+inline double_t Vector3::length() const {
     return sqrt(this->vec3[0] * this->vec3[0] + this->vec3[1] * this->vec3[1] + this->vec3[2] * this->vec3[2]);
 }
 
-inline Vector3 Vector3::normalize() const{
-    double tmp_len = this->length();
+inline double_t Vector3::distance() const {
+    return sqrt(this->vec3[0] * this->vec3[0] + this->vec3[1] * this->vec3[1] + this->vec3[2] * this->vec3[2]);
+}
+
+inline double_t Vector3::squared_distance() const {
+    return this->vec3[0] * this->vec3[0] + this->vec3[1] * this->vec3[1] + this->vec3[2] * this->vec3[2];
+}
+
+inline Vector3 Vector3::normalize() const {
+    double_t tmp_len = this->length();
     Vector3 tmp_v = *this;
-    for (double &data : tmp_v.vec3) {
+    for (double_t &data : tmp_v.vec3) {
         data /= tmp_len;
     }
     return tmp_v;
 }
-
 
 inline bool Vector3::operator==(const Vector3 &_v) {
     for (int i = 0; i < 3; ++i) {
@@ -203,8 +213,8 @@ inline std::ostream &operator<<(std::ostream &_os, const Vector3 &_v) {
     return _os;
 }
 
-inline double dot(const Vector3 &_v0, const Vector3 &_v1) {
-    double tmp_result = 0;
+inline double_t dot(const Vector3 &_v0, const Vector3 &_v1) {
+    double_t tmp_result = 0;
     for (int i = 0; i < 3; ++i) {
         tmp_result += _v0[i] * _v1[i];
     }
@@ -227,11 +237,11 @@ inline Vector3 operator*(const Vector3 &_v0, const Vector3 &_v1) {
     return {_v0[0] * _v1[0], _v0[1] * _v1[1], _v0[2] * _v1[2]};
 }
 
-inline Vector3 operator*(const Vector3 &_v0, const double &_d) {
+inline Vector3 operator*(const Vector3 &_v0, const double_t &_d) {
     return {_v0[0] * _d, _v0[1] * _d, _v0[2] * _d};
 }
 
-inline Vector3 operator*(const double &_d, const Vector3 &_v0) {
+inline Vector3 operator*(const double_t &_d, const Vector3 &_v0) {
     return {_v0[0] * _d, _v0[1] * _d, _v0[2] * _d};
 }
 
@@ -239,8 +249,9 @@ inline Vector3 operator/(const Vector3 &_v0, const Vector3 &_v1) {
     return {_v0[0] / _v1[0], _v0[1] / _v1[1], _v0[2] / _v1[2]};
 }
 
-inline Vector3 operator/(const Vector3 &_v0, const double &_d) {
+inline Vector3 operator/(const Vector3 &_v0, const double_t &_d) {
     return {_v0[0] / _d, _v0[1] / _d, _v0[2] / _d};
 }
+
 
 #endif //MATRIXOPERATION_CPP_Vector3_H

@@ -87,6 +87,9 @@
 		<Unit filename="/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/FluidDatabase.h">
 			<Option target="SPH_Fluid_Solver"/>
 		</Unit>
+		<Unit filename="/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/FluidParameter.h">
+			<Option target="SPH_Fluid_Solver"/>
+		</Unit>
 		<Unit filename="/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/FluidSolver.h">
 			<Option target="SPH_Fluid_Solver"/>
 		</Unit>
