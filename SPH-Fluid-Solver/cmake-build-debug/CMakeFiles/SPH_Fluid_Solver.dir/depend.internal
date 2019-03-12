@@ -3,6 +3,8 @@
 
 CMakeFiles/SPH_Fluid_Solver.dir/main.cpp.o
  /home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/FluidDatabase.h
+ /home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/FluidParameter.h
+ /home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/FluidSolver.h
  /home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/Particle.h
  /home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/RestrictionBox.h
  /home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/Vector3.h

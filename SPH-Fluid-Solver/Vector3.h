@@ -183,6 +183,9 @@ inline double_t Vector3::squared_distance() const {
 
 inline Vector3 Vector3::normalize() const {
     double_t tmp_len = this->length();
+    if(tmp_len == 0.0){
+        return Vector3();
+    }
     Vector3 tmp_v = *this;
     for (double_t &data : tmp_v.vec3) {
         data /= tmp_len;

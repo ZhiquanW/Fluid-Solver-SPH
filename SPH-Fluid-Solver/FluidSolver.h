@@ -29,11 +29,17 @@ private:
 public:
     FluidSolver() = default;
 
-    FluidSolver(const FluidParameter &_fluid_parameter, const RestrictionBox &_restriction_box,
-                FluidDatabase _fluid_database)
+    FluidSolver(const FluidParameter &_fluid_parameter,
+                const RestrictionBox &_restriction_box,
+                FluidDatabase &_fluid_database)
             : fluid_parameter(_fluid_parameter),
               restriction_box(_restriction_box),
-              fluid_database(std::move(_fluid_database)) {
+              fluid_database(_fluid_database) {
+    }
+
+    void test_kernel_functions(){
+        cout << compute_kernel_poly6(vec3(),2) << endl;
+        cout << compute_hamiltonian_kernel_spiky(vec3(0,1,0),2) << endl;
     }
 
 private:
