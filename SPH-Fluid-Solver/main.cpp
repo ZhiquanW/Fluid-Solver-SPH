@@ -9,15 +9,51 @@ using namespace std;
 void test_class_RestrictionBox_Particle();
 
 void test_RestrictionBox();
+
 void test_fluid_solver();
+
+void test_iterator();
+
+void test_initialize_particles();
 int main() {
     std::cout << "Hello, World!" << std::endl;
-
+    test_initialize_particles();
+//    cout  << pow(8,1/3.0)<< endl;
     // Test
-    test_fluid_solver();
+//    test_iterator();
     return 0;
 }
 
+void test_iterator() {
+    vector<Particle> tmp_vector;
+    tmp_vector.reserve(10);
+    for (int i = 0; i < 10; ++i) {
+        tmp_vector.emplace_back(Particle(static_cast<size_t>(i)));
+    }
+    cout << tmp_vector.size()<< endl;
+    for (auto &p :tmp_vector) {
+        cout << p.get_index()<< endl;
+    }
+    for(auto&p:tmp_vector){
+        p.set_index(100);
+    }
+    for (auto &p :tmp_vector) {
+        cout << p.get_index()<< endl;
+    }
+
+}
+
+void test_initialize_particles() {
+    const FluidParameter tmp_paras(1000, 0.01, 1, 1, 1, 1, 1);
+    const RestrictionBox tmp_box(vec3(0, 0, 0), vec3(100, 100, 100));
+    FluidDatabase tmp_database("test0", tmp_paras.get_particle_num(), 60, 0.01);
+    FluidSolver tmp_solver(tmp_paras, tmp_box, tmp_database);
+
+    tmp_solver.initialize_particles(vec3(100, 100, 100), 100.0);
+    for (auto &p :tmp_solver.get_realtime_particle_list()) {
+        cout << p.get_index() <<" " << p.get_position() << endl;
+    }
+}
 void test_fluid_solver() {
     const FluidParameter tmp_paras(1000, 0.01, 1, 1, 1, 1, 1);
     const RestrictionBox tmp_box(vec3(0, 0, 0), vec3(100, 100, 100));

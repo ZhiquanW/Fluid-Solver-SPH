@@ -17,6 +17,8 @@ private:
     double front_back_detection[2]{};
     double bottom_top_detection[2]{};
 public:
+    RestrictionBox() = default;
+
     RestrictionBox(const vec3 &vertex0, const vec3 &vertex1) {
 //        cout << vertex0 << " " << vertex1 << endl;
         left_right_detection[0] = vertex0.x();
@@ -59,8 +61,9 @@ public:
     }
 
     vec3 reflect_vector(const vec3 &in_vec, const vec3 &in_normal) {
-        return in_vec - 2 * dot( in_vec, in_normal) * in_normal;
+        return in_vec - 2 * dot(in_vec, in_normal) * in_normal;
     }
+
 private:
 
     bool detect_restriction(const vec3 &in_pos) {
@@ -86,7 +89,6 @@ private:
 //        cout << in_vec_pos + in_dis * in_vec_dir << endl;
         return in_dis <= 0;
     }
-
 
 
 };

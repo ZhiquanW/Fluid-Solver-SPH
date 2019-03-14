@@ -21,13 +21,12 @@
 
 class FluidSolver {
 private:
-    FluidParameter fluid_parameter;
-    RestrictionBox restriction_box;
-    FluidDatabase fluid_database;
-    vector<Particle> realtime_particle_list;
+    FluidParameter fluid_parameter{};
+    RestrictionBox restriction_box{};
+    FluidDatabase fluid_database{};
+    vector<Particle> realtime_particle_list{};
 
 public:
-    FluidSolver() = default;
 
     FluidSolver(const FluidParameter &_fluid_parameter,
                 const RestrictionBox &_restriction_box,
@@ -37,12 +36,45 @@ public:
               fluid_database(_fluid_database) {
     }
 
-    void test_kernel_functions(){
-        cout << compute_kernel_poly6(vec3(),2) << endl;
-        cout << compute_hamiltonian_kernel_spiky(vec3(0,1,0),2) << endl;
+    void test_kernel_functions() {
+        cout << compute_kernel_poly6(vec3(), 2) << endl;
+        cout << compute_hamiltonian_kernel_spiky(vec3(0, 1, 0), 2) << endl;
     }
 
+    void initialize_particles(const vec3 &center_pos, double _cube_edge_len) {
+//        cout << fluid_parameter.get_particle_num() << endl;
+        double_t particle_interval = _cube_edge_len / pow((double_t) fluid_parameter.get_particle_num(), 1 / 3.0);
+//        cout << particle_interval << endl;
+        auto initial_pos = vec3(center_pos.x() - _cube_edge_len / 2, center_pos.y() - _cube_edge_len / 2,
+                                center_pos.z() - _cube_edge_len / 2);
+        double_t particle_num_per_edge = _cube_edge_len / particle_interval;
+        vec3 tmp_vec;
+        size_t cur_num = 0;
+        for (size_t i = 0; i < particle_num_per_edge; ++i) {
+            for (size_t j = 0; j < particle_num_per_edge; ++j) {
+                for (size_t k = 0; k < particle_num_per_edge; ++k) {
+                    ++cur_num;
+                    if (cur_num > fluid_parameter.get_particle_num()) {
+                        break;
+                    }
+                    tmp_vec = initial_pos + vec3(i * particle_interval, j * particle_interval, k * particle_interval);
+                    Particle tmp_particle(cur_num);
+                    tmp_particle.set_position(tmp_vec);
+                    realtime_particle_list.emplace_back(tmp_particle);
+                }
+            }
+        }
+    }
+
+    void compute_density() {
+        for (auto &p:realtime_particle_list) {
+
+        }
+    }
+
+
 private:
+
     const double_t compute_kernel_poly6(const vec3 &_offset_vec, const double_t &_core_radius) {
         double_t tmp_dis = _offset_vec.length();
         if (tmp_dis > _core_radius) {
@@ -79,7 +111,14 @@ private:
         return 45.0 / (M_PI * pow(_core_radius, 6)) * (_core_radius - tmp_dis);
     }
 
+public:
+    const vector<Particle> &get_realtime_particle_list() const {
+        return realtime_particle_list;
+    }
 
+    void set_realtime_particle_list(const vector<Particle> &realtime_particle_list) {
+        FluidSolver::realtime_particle_list = realtime_particle_list;
+    }
 };
 
 

@@ -21,7 +21,7 @@ private:
 public:
     Particle() = default;
 
-    explicit Particle(const size_t &index):index(index) {
+    explicit Particle(size_t index): index(index) {
     }
 
     size_t get_index() const {
