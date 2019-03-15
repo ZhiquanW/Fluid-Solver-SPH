@@ -17,11 +17,11 @@ void test_iterator();
 
 void test_initialize_particles();
 
-void test_compute_density();
+void test_compute_functions();
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
-    test_compute_density();
+    test_compute_functions();
 //    test_initialize_particles();
 //    Test
 //    vector<Particle> tmp_vec;
@@ -44,17 +44,16 @@ int main() {
     return 0;
 }
 
-void test_compute_density() {
-    const FluidParameter tmp_paras(100000, 0.01, 0.01, 1000, 1, 1, 0.075, 9.8);
+void test_compute_functions() {
+    const FluidParameter tmp_paras(10000, 0.0004, 0.01, 1000, 1, 1, 0.075, 9.8);
     const RestrictionBox tmp_box(vec3(0, 0, 0), vec3(100, 100, 100));
     FluidDatabase tmp_database("test0", tmp_paras.get_particle_num(), 60, 0.01);
     FluidSolver tmp_solver(tmp_paras, tmp_box, tmp_database);
     tmp_solver.initialize_particles(vec3(100, 100, 100), 0.1);
     tmp_solver.compute_density();
-    tmp_paras.show_parameters();
-    cout << tmp_solver.get_realtime_particle_list().size() << endl;
+    tmp_solver.compute_pressure();
     for (auto &p:tmp_solver.get_realtime_particle_list()) {
-        cout << p.get_index() << " " << p.get_density() << endl;
+        cout << p.get_index() << " " << p.get_density() << " " << p.get_pressure() << endl;
     }
 }
 

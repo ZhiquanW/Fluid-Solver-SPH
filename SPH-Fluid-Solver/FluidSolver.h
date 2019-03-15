@@ -36,11 +36,6 @@ public:
               fluid_database(_fluid_database) {
     }
 
-    void test_kernel_functions() {
-        cout << compute_kernel_poly6(vec3(), 2) << endl;
-        cout << compute_hamiltonian_kernel_spiky(vec3(0, 1, 0), 2) << endl;
-    }
-
     void initialize_particles(const vec3 &center_pos, double _cube_edge_len) {
         realtime_particle_list.reserve(fluid_parameter.get_particle_num());
         double_t particle_interval = _cube_edge_len / pow((double_t) fluid_parameter.get_particle_num(), 1 / 3.0);
@@ -67,8 +62,6 @@ public:
 
     void compute_density() {
         auto tmp_vector = realtime_particle_list;
-        //cout << "mass:" << fluid_parameter.get_particle_mass() << endl;
-        int counter = 0;
         for (auto &p_i:realtime_particle_list) {
             double_t tmp_density = 0;
             for (auto &p_j:tmp_vector) {
@@ -80,11 +73,17 @@ public:
                                                     fluid_parameter.get_core_radius());
             }
             p_i.set_density(tmp_density);
-            cout << ++counter << " " << tmp_density << endl;
 
         }
     }
 
+    void compute_pressure() {
+        auto tmp_vector = realtime_particle_list;
+        for (auto &p_i:realtime_particle_list) {
+            p_i.set_pressure(
+                    fluid_parameter.get_gas_constant() * (p_i.get_density() - fluid_parameter.get_rest_density()));
+        }
+    }
 
 private:
 
