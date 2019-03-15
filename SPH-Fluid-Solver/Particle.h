@@ -14,6 +14,7 @@ private:
     vec3 position;
     vec3 velocity;
     vec3 acceleration;
+    double_t density{};
     vec3 gravity_acceleration;
     vec3 pressure_acceleration;
     vec3 viscosity_acceleration;
@@ -56,6 +57,13 @@ public:
         Particle::acceleration = acceleration;
     }
 
+    double_t get_density() const {
+        return density;
+    }
+
+    void set_density(double_t density) {
+        Particle::density = density;
+    }
     const vec3 &get_gravity_acceleration() const {
         return gravity_acceleration;
     }

@@ -25,6 +25,8 @@ Particle.h
 /home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/FluidParameter.h
 cmath
 -
+string
+-
 
 /home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/FluidSolver.h
 utility

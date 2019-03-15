@@ -42,9 +42,8 @@ public:
     }
 
     void initialize_particles(const vec3 &center_pos, double _cube_edge_len) {
-//        cout << fluid_parameter.get_particle_num() << endl;
+        realtime_particle_list.reserve(fluid_parameter.get_particle_num());
         double_t particle_interval = _cube_edge_len / pow((double_t) fluid_parameter.get_particle_num(), 1 / 3.0);
-//        cout << particle_interval << endl;
         auto initial_pos = vec3(center_pos.x() - _cube_edge_len / 2, center_pos.y() - _cube_edge_len / 2,
                                 center_pos.z() - _cube_edge_len / 2);
         double_t particle_num_per_edge = _cube_edge_len / particle_interval;
@@ -55,7 +54,7 @@ public:
                 for (size_t k = 0; k < particle_num_per_edge; ++k) {
                     ++cur_num;
                     if (cur_num > fluid_parameter.get_particle_num()) {
-                        break;
+                        return;
                     }
                     tmp_vec = initial_pos + vec3(i * particle_interval, j * particle_interval, k * particle_interval);
                     Particle tmp_particle(cur_num);
@@ -67,7 +66,21 @@ public:
     }
 
     void compute_density() {
-        for (auto &p:realtime_particle_list) {
+        auto tmp_vector = realtime_particle_list;
+        //cout << "mass:" << fluid_parameter.get_particle_mass() << endl;
+        int counter = 0;
+        for (auto &p_i:realtime_particle_list) {
+            double_t tmp_density = 0;
+            for (auto &p_j:tmp_vector) {
+                if (p_i.get_index() == p_j.get_index()) {
+                    continue;
+                }
+                tmp_density += fluid_parameter.get_particle_mass() *
+                               compute_kernel_poly6(p_i.get_position() - p_j.get_position(),
+                                                    fluid_parameter.get_core_radius());
+            }
+            p_i.set_density(tmp_density);
+            cout << ++counter << " " << tmp_density << endl;
 
         }
     }
