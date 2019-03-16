@@ -85,6 +85,21 @@ public:
         }
     }
 
+    void compute_pressure_acceleration() {
+        auto tmp_vector = realtime_particle_list;
+        for (auto &p_i:realtime_particle_list) {
+            auto tmp_force = vec3();
+            for (auto &p_j:realtime_particle_list) {
+                tmp_force += fluid_parameter.get_particle_mass() * (p_i.get_pressure() + p_j.get_pressure()) /
+                             (2.0 * p_i.get_density()) *
+                             compute_hamiltonian_kernel_spiky(p_i.get_position() - p_j.get_position(),
+                                                              fluid_parameter.get_core_radius());
+            }
+            p_i.set_pressure_acceleration(-1 * tmp_force/);
+        }
+    }
+
+    void compute_
 private:
 
     const double_t compute_kernel_poly6(const vec3 &_offset_vec, const double_t &_core_radius) {

@@ -52,8 +52,10 @@ void test_compute_functions() {
     tmp_solver.initialize_particles(vec3(100, 100, 100), 0.1);
     tmp_solver.compute_density();
     tmp_solver.compute_pressure();
+    tmp_solver.compute_pressure_acceleration();
     for (auto &p:tmp_solver.get_realtime_particle_list()) {
-        cout << p.get_index() << " " << p.get_density() << " " << p.get_pressure() << endl;
+        cout << p.get_index() << ": " << endl << p.get_density() << " " << p.get_pressure() << endl
+             << p.get_pressure_acceleration() << endl;
     }
 }
 
