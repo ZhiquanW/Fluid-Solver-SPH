@@ -53,9 +53,9 @@ void test_compute_functions() {
     tmp_solver.compute_density();
     tmp_solver.compute_pressure();
     tmp_solver.compute_pressure_acceleration();
+    tmp_solver.compute_viscosity_acceleration();
     for (auto &p:tmp_solver.get_realtime_particle_list()) {
-        cout << p.get_index() << ": " << endl << p.get_density() << " " << p.get_pressure() << endl
-             << p.get_pressure_acceleration() << endl;
+        cout << p.get_index() << ": " << endl << p.get_viscosity_acceleration() << endl;
     }
 }
 

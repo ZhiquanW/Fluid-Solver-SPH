@@ -90,16 +90,33 @@ public:
         for (auto &p_i:realtime_particle_list) {
             auto tmp_force = vec3();
             for (auto &p_j:realtime_particle_list) {
-                tmp_force += fluid_parameter.get_particle_mass() * (p_i.get_pressure() + p_j.get_pressure()) /
-                             (2.0 * p_i.get_density()) *
+                tmp_force += (p_i.get_pressure() + p_j.get_pressure()) / p_j.get_density() *
                              compute_hamiltonian_kernel_spiky(p_i.get_position() - p_j.get_position(),
                                                               fluid_parameter.get_core_radius());
             }
-            p_i.set_pressure_acceleration(-1 * tmp_force/);
+            p_i.set_pressure_acceleration(
+                    -1 * fluid_parameter.get_particle_mass() / (p_i.get_density() * 2) * tmp_force);
         }
     }
 
-    void compute_
+    void compute_viscosity_acceleration() {
+        auto tmp_vector = realtime_particle_list;
+        for (auto &p_i:realtime_particle_list) {
+            auto tmp_force = vec3();
+            for (auto &p_j:realtime_particle_list) {
+                tmp_force += (p_i.get_velocity() - p_j.get_velocity()) *
+                             compute_laplacian_kernel_viscosity(p_i.get_position() - p_j.get_position(),
+                                                                fluid_parameter.get_core_radius());
+            }
+            p_i.set_viscosity_acceleration(
+                    fluid_parameter.get_viscosity_coefficient() * fluid_parameter.get_particle_mass() /
+                    p_i.get_density() * tmp_force);
+        }
+    }
+
+    void 
+
+
 private:
 
     const double_t compute_kernel_poly6(const vec3 &_offset_vec, const double_t &_core_radius) {
