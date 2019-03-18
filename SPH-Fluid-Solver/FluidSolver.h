@@ -89,9 +89,9 @@ public:
         auto tmp_vector = realtime_particle_list;
         for (auto &p_i:realtime_particle_list) {
             auto tmp_force = vec3();
-            for (auto &p_j:realtime_particle_list) {
+            for (auto &p_j:tmp_vector) {
                 tmp_force += (p_i.get_pressure() + p_j.get_pressure()) / p_j.get_density() *
-                             compute_hamiltonian_kernel_spiky(p_i.get_position() - p_j.get_position(),
+                             compute_kernel_spiky_hamiltonian(p_i.get_position() - p_j.get_position(),
                                                               fluid_parameter.get_core_radius());
             }
             p_i.set_pressure_acceleration(
@@ -103,9 +103,9 @@ public:
         auto tmp_vector = realtime_particle_list;
         for (auto &p_i:realtime_particle_list) {
             auto tmp_force = vec3();
-            for (auto &p_j:realtime_particle_list) {
-                tmp_force += (p_i.get_velocity() - p_j.get_velocity()) *
-                             compute_laplacian_kernel_viscosity(p_i.get_position() - p_j.get_position(),
+            for (auto &p_j:tmp_vector) {
+                tmp_force += (p_i.get_velocity() - p_j.get_velocity()) * p_j.get_density() *
+                             compute_kernel_viscosity_laplacian(p_i.get_position() - p_j.get_position(),
                                                                 fluid_parameter.get_core_radius());
             }
             p_i.set_viscosity_acceleration(
@@ -114,7 +114,27 @@ public:
         }
     }
 
-    void 
+    void compute_surface_tension_acceleration() {
+        auto tmp_vector = realtime_particle_list;
+        for (auto &p_i:realtime_particle_list) {
+            auto tmp_force = vec3();
+            auto tmp_gradient = vec3();
+            auto tmp_curvature = 0.0;
+            for (auto &p_j:tmp_vector) {
+                tmp_gradient += (1.0 / p_j.get_density()) *
+                                compute_kernel_poly6_hamiltonian(p_i.get_position() - p_j.get_position(),
+                                                                 fluid_parameter.get_core_radius());
+                tmp_curvature += (1.0 / p_j.get_density()) *
+                                 compte_kernel_poly6_laplacian(p_i.get_position() - p_j.get_position(),
+                                                               fluid_parameter.get_core_radius());
+            }
+            tmp_gradient *= -1.0 * fluid_parameter.get_particle_mass();
+            tmp_curvature *= fluid_parameter.get_particle_mass();
+            p_i.set_surface_tension_acceleration(
+                    -1.0 * fluid_parameter.get_tension_coefficient() / p_i.get_density() * tmp_curvature *
+                    tmp_gradient.normalize());
+        }
+    }
 
 
 private:
@@ -128,18 +148,28 @@ private:
                pow(pow(_core_radius, 2) - _offset_vec.squared_distance(), 3);
     }
 
-    const double_t compte_laplacian_kernel_poly6(const vec3 &_offset_vec, const double_t &_core_radius) {
+    const vec3 compute_kernel_poly6_hamiltonian(const vec3 &_offset_vec, const double_t &_core_radius) {
+        double_t tmp_dis = _offset_vec.length();
+        if (tmp_dis > _core_radius) {
+            return vec3();
+        }
+        return -945.0 / (32.0 * M_PI * pow(_core_radius, 9)) *
+               pow((pow(_core_radius, 2) - _offset_vec.squared_distance()), 2) *
+               _offset_vec;
+    }
+
+    const double_t compte_kernel_poly6_laplacian(const vec3 &_offset_vec, const double_t &_core_radius) {
         double_t tmp_dis = _offset_vec.length();
         double_t squared_distance = _offset_vec.squared_distance();
         double_t squared_radius = pow(_core_radius, 2);
         if (tmp_dis > _core_radius) {
             return 0.0;
         }
-        return 945 / (8 * M_PI * pow(_core_radius, 9)) * pow(squared_radius - squared_distance, 2) *
+        return 945.0 / (8.0 * M_PI * pow(_core_radius, 9)) * pow(squared_radius - squared_distance, 2) *
                (squared_distance - (3.0 / 4.0) * (squared_distance - squared_radius));
     }
 
-    const vec3 compute_hamiltonian_kernel_spiky(const vec3 &_offset_vec, const double_t &_core_radius) {
+    const vec3 compute_kernel_spiky_hamiltonian(const vec3 &_offset_vec, const double_t &_core_radius) {
         double_t tmp_dis = _offset_vec.length();
         if (tmp_dis > _core_radius) {
             return vec3();
@@ -147,7 +177,7 @@ private:
         return -45.0 / (M_PI * pow(_core_radius, 6)) * pow(_core_radius - tmp_dis, 2) * _offset_vec.normalize();
     }
 
-    const double_t compute_laplacian_kernel_viscosity(const vec3 &_offset_vec, const double_t &_core_radius) {
+    const double_t compute_kernel_viscosity_laplacian(const vec3 &_offset_vec, const double_t &_core_radius) {
         double_t tmp_dis = _offset_vec.length();
         if (tmp_dis > _core_radius) {
             return 0.0;

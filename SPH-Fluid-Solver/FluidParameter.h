@@ -108,6 +108,15 @@ public:
         FluidParameter::gravity_acceleration = gravity_acceleration;
     }
 
+    double_t get_tension_coefficient() const {
+        return tension_coefficient;
+    }
+
+    void set_tension_coefficient(double_t tension_coefficient) {
+        FluidParameter::tension_coefficient = tension_coefficient;
+    }
+
+
 };
 
 
