@@ -60,7 +60,21 @@ public:
         }
     }
 
+    void simulate_particles() {
+        for (size_t i = 0; i < fluid_database.get_frame_num(); ++i) {
+            compute_particle_acceleration();
+            restrict_particles();
+            update_position();
+            fluid_database.append_particle_list(i, realtime_particle_list);
+        }
+    }
 
+    void output_data(){
+        fluid_database.export_database();
+    }
+
+
+private:
     void compute_particle_acceleration() {
         compute_density();
         compute_pressure();
@@ -81,7 +95,13 @@ public:
         }
     }
 
-private:
+    void update_position() {
+        for (auto &p:realtime_particle_list) {
+            p.set_velocity(p.get_velocity() + p.get_acceleration() * fluid_database.get_frame_interval());
+            p.set_position(p.get_position() + p.get_velocity() * fluid_database.get_frame_interval());
+        }
+    }
+
     void compute_density() {
         auto tmp_vector = realtime_particle_list;
         for (auto &p_i:realtime_particle_list) {

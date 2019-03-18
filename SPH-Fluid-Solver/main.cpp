@@ -50,10 +50,8 @@ void test_compute_functions() {
     FluidDatabase tmp_database("test0", tmp_paras.get_particle_num(), 60, 0.01);
     FluidSolver tmp_solver(tmp_paras, tmp_box, tmp_database);
     tmp_solver.initialize_particles(vec3(100, 100, 100), 0.1);
-    tmp_solver.compute_particle_acceleration();
-    for (auto &p:tmp_solver.get_realtime_particle_list()) {
-        cout << p.get_index() << ": " << endl << p.get_acceleration() << endl;
-    }
+    tmp_solver.simulate_particles();
+    tmp_solver.output_data();
 }
 
 void test_iterator() {
