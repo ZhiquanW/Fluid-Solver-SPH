@@ -11,7 +11,8 @@
 #ifndef SPH_FLUID_SOLVER_FLUIDSOLVER_H
 #define SPH_FLUID_SOLVER_FLUIDSOLVER_H
 
-#include <math.h>
+#include <cmath>
+#include <chrono>
 
 #include "FluidParameter.h"
 #include "FluidDatabase.h"
@@ -37,6 +38,7 @@ public:
     }
 
     void initialize_particles(const vec3 &center_pos, double _cube_edge_len) {
+        cout << "Start Initializing Particles : " << fluid_parameter.get_particle_num() << endl;
         realtime_particle_list.reserve(fluid_parameter.get_particle_num());
         double_t particle_interval = _cube_edge_len / pow((double_t) fluid_parameter.get_particle_num(), 1 / 3.0);
         auto initial_pos = vec3(center_pos.x() - _cube_edge_len / 2, center_pos.y() - _cube_edge_len / 2,
@@ -49,6 +51,7 @@ public:
                 for (size_t k = 0; k < particle_num_per_edge; ++k) {
                     ++cur_num;
                     if (cur_num > fluid_parameter.get_particle_num()) {
+                        cout << "Particles Initialized" << endl;
                         return;
                     }
                     tmp_vec = initial_pos + vec3(i * particle_interval, j * particle_interval, k * particle_interval);
@@ -58,18 +61,39 @@ public:
                 }
             }
         }
+
     }
 
     void simulate_particles() {
+        //Record Start Time
+        auto start = std::chrono::system_clock::now();
+        auto end = std::chrono::system_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+        cout << "Start Simulation : " << fluid_database.get_frame_num() << " frames" << endl;
         for (size_t i = 0; i < fluid_database.get_frame_num(); ++i) {
+            cout << flush << '\r';
+            printf("%.2lf%%", (i + 1.0) * 100.0 / fluid_database.get_frame_num());
+            end = std::chrono::system_clock::now();
+            duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+            printf("\t%.2f min", (double) duration.count() / std::chrono::microseconds::period::den / 60);
+            printf("\tEstimated Time : %.2f min",
+                   (double) (fluid_database.get_frame_num() - i) / i * (double) duration.count() /
+                   std::chrono::microseconds::period::den / 60);
+
             compute_particle_acceleration();
+            cout << "Density : " << realtime_particle_list[0].get_density() << endl;
+            cout << "Pressure : " << realtime_particle_list[0].get_pressure() << endl;
+            cout << "Pressure_Acceleration : " << realtime_particle_list[0].get_pressure_acceleration() << endl;
+            cout << "Viscosity_Acceleration : " << realtime_particle_list[0].get_viscosity_acceleration() << endl;
+
             restrict_particles();
             update_position();
             fluid_database.append_particle_list(i, realtime_particle_list);
         }
     }
 
-    void output_data(){
+    void output_data() {
         fluid_database.export_database();
     }
 
