@@ -17,7 +17,7 @@ private:
     double_t viscosity_coefficient{};
     double_t gas_constant{};
     double_t tension_coefficient{};
-    double_t gravity_acceleration{};
+    double_t gravity_acceleration_coefficient{};
 
 public:
     FluidParameter() = default;
@@ -25,11 +25,12 @@ public:
     FluidParameter(const size_t _particle_num, const double_t &_particle_mass,
                    const double_t &_core_radius, const double_t &_rest_density,
                    const double_t &_viscosity_coefficient, const double_t &_gas_constant,
-                   const double_t &_tension_coefficient, const double_t &_gravity_acceleration) :
+                   const double_t &_tension_coefficient, const double_t &_gravity_acceleration_coefficient) :
             particle_num(_particle_num), particle_mass(_particle_mass),
             core_radius(_core_radius), rest_density(_rest_density),
             viscosity_coefficient(_viscosity_coefficient), gas_constant(_gas_constant),
-            tension_coefficient(_tension_coefficient), gravity_acceleration(_gravity_acceleration) {
+            tension_coefficient(_tension_coefficient),
+            gravity_acceleration_coefficient(_gravity_acceleration_coefficient) {
     }
 
 
@@ -41,7 +42,7 @@ public:
                   << "Core_Radius:" << core_radius << std::endl
                   << "Viscosity_Coefficient:" << viscosity_coefficient << std::endl
                   << "Gas_Constant:" << gas_constant << std::endl
-                  << "Gravity_Acceleration" << gravity_acceleration << std::endl;
+                  << "Gravity_Acceleration_Coefficient" << gravity_acceleration_coefficient << std::endl;
     }
 
     const size_t &get_particle_num() const {
@@ -92,20 +93,12 @@ public:
         FluidParameter::gas_constant = gas_constant;
     }
 
-    double_t getGravity_acceleration() const {
-        return gravity_acceleration;
+    double_t get_gravity_acceleration_coefficient() const {
+        return gravity_acceleration_coefficient;
     }
 
-    void setGravity_acceleration(double_t gravity_acceleration) {
-        FluidParameter::gravity_acceleration = gravity_acceleration;
-    }
-
-    double_t get_gravity_acceleration() const {
-        return gravity_acceleration;
-    }
-
-    void set_gravity_accelertation(double_t gravity_acceleration) {
-        FluidParameter::gravity_acceleration = gravity_acceleration;
+    void set_gravity_acceleration_coefficient(double_t gravity_acceleration_coefficient) {
+        FluidParameter::gravity_acceleration_coefficient = gravity_acceleration_coefficient;
     }
 
     double_t get_tension_coefficient() const {

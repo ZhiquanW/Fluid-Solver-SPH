@@ -60,6 +60,28 @@ public:
         }
     }
 
+
+    void compute_particle_acceleration() {
+        compute_density();
+        compute_pressure();
+        compute_pressure_acceleration();
+        compute_viscosity_acceleration();
+        compute_surface_tension_acceleration();
+        for (auto &p:realtime_particle_list) {
+            p.set_acceleration(p.get_pressure_acceleration() +
+                               p.get_viscosity_acceleration() +
+                               p.get_surface_tension_acceleration() +
+                               fluid_parameter.get_gravity_acceleration_coefficient() * vec3(0, -1, 0));
+        }
+    }
+
+    void restrict_particles() {
+        for (auto &p:realtime_particle_list) {
+            restriction_box.restrict_particle(p);
+        }
+    }
+
+private:
     void compute_density() {
         auto tmp_vector = realtime_particle_list;
         for (auto &p_i:realtime_particle_list) {
@@ -135,9 +157,6 @@ public:
                     tmp_gradient.normalize());
         }
     }
-
-
-private:
 
     const double_t compute_kernel_poly6(const vec3 &_offset_vec, const double_t &_core_radius) {
         double_t tmp_dis = _offset_vec.length();
