@@ -45,11 +45,11 @@ int main() {
 }
 
 void test_compute_functions() {
-    const FluidParameter tmp_paras(1000, 0.0004, 0.01, 1000, 1, 1, 0.075, 9.8);
-    const RestrictionBox tmp_box(vec3(0, 0, 0), vec3(100, 100, 100));
+    const FluidParameter tmp_paras(1000, 0.0004, 10, 10, 1, 1, 0.075, 9.8);
+    const RestrictionBox tmp_box(vec3(0, 0, 0), vec3(100, 200, 100));
     FluidDatabase tmp_database("test0_Mar18_21_56", tmp_paras.get_particle_num(), 60, 0.01);
     FluidSolver tmp_solver(tmp_paras, tmp_box, tmp_database);
-    tmp_solver.initialize_particles(vec3(100, 100, 100), 0.1);
+    tmp_solver.initialize_particles(vec3(100, 100, 100), 0.01);
     tmp_solver.simulate_particles();
     tmp_solver.output_data();
 }

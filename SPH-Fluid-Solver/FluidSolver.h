@@ -82,11 +82,13 @@ public:
                    std::chrono::microseconds::period::den / 60);
 
             compute_particle_acceleration();
+            cout << endl;
             cout << "Density : " << realtime_particle_list[0].get_density() << endl;
             cout << "Pressure : " << realtime_particle_list[0].get_pressure() << endl;
             cout << "Pressure_Acceleration : " << realtime_particle_list[0].get_pressure_acceleration() << endl;
             cout << "Viscosity_Acceleration : " << realtime_particle_list[0].get_viscosity_acceleration() << endl;
-
+            cout << "Surface_Tension_Acceleration : " << realtime_particle_list[0].get_surface_tension_acceleration() << endl;
+            cout << endl;
             restrict_particles();
             update_position();
             fluid_database.append_particle_list(i, realtime_particle_list);
@@ -131,9 +133,9 @@ private:
         for (auto &p_i:realtime_particle_list) {
             double_t tmp_density = 0;
             for (auto &p_j:tmp_vector) {
-                if (p_i.get_index() == p_j.get_index()) {
-                    continue;
-                }
+//                if (p_i.get_index() == p_j.get_index()) {
+//                    continue;
+//                }
                 tmp_density += fluid_parameter.get_particle_mass() *
                                compute_kernel_poly6(p_i.get_position() - p_j.get_position(),
                                                     fluid_parameter.get_core_radius());
