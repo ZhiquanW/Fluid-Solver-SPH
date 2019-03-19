@@ -30,6 +30,9 @@ public:
     }
 
     void restrict_particle(Particle &in_particle) {
+        if (in_particle.get_velocity().length() == 0) {
+            return;
+        }
         if (detect_restriction(in_particle.get_position())) {
             vec3 normal_arr[6] = {vec3(1, 0, 0), vec3(-1, 0, 0),
                                   vec3(0, 1, 0), vec3(0, -1, 0),

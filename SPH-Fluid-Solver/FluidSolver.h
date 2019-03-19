@@ -88,6 +88,7 @@ public:
             cout << "Pressure_Acceleration : " << realtime_particle_list[0].get_pressure_acceleration() << endl;
             cout << "Viscosity_Acceleration : " << realtime_particle_list[0].get_viscosity_acceleration() << endl;
             cout << "Surface_Tension_Acceleration : " << realtime_particle_list[0].get_surface_tension_acceleration() << endl;
+            cout << "Position : " << realtime_particle_list[0].get_position() << endl;
             cout << endl;
             restrict_particles();
             update_position();
@@ -163,7 +164,7 @@ private:
                                                               fluid_parameter.get_core_radius());
             }
             p_i.set_pressure_acceleration(
-                    -1 * fluid_parameter.get_particle_mass() / (p_i.get_density() * 2) * tmp_force);
+                    -1.0 * fluid_parameter.get_particle_mass() / (p_i.get_density() * 2) * tmp_force);
         }
     }
 
