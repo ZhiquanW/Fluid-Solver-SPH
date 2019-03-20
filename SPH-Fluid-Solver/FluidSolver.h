@@ -80,17 +80,27 @@ public:
             printf("\tEstimated Time : %.2f min",
                    (double) (fluid_database.get_frame_num() - i) / i * (double) duration.count() /
                    std::chrono::microseconds::period::den / 60);
-
             compute_particle_acceleration();
-            cout << endl;
-            cout << "Density : " << realtime_particle_list[0].get_density() << endl;
-            cout << "Pressure : " << realtime_particle_list[0].get_pressure() << endl;
-            cout << "Pressure_Acceleration : " << realtime_particle_list[0].get_pressure_acceleration() << endl;
-            cout << "Viscosity_Acceleration : " << realtime_particle_list[0].get_viscosity_acceleration() << endl;
-            cout << "Surface_Tension_Acceleration : " << realtime_particle_list[0].get_surface_tension_acceleration() << endl;
-            cout << "Position : " << realtime_particle_list[0].get_position() << endl;
-            cout << endl;
+            if (true) {
+                cout << endl;
+                cout << "Index : " << realtime_particle_list[6].get_index() << endl;
+                cout << "Density : " << realtime_particle_list[6].get_density() << endl;
+                cout << "Pressure : " << realtime_particle_list[6].get_pressure() << endl;
+                cout << "Pressure_Acceleration : " << realtime_particle_list[6].get_pressure_acceleration() << endl;
+                cout << "Viscosity_Acceleration : " << realtime_particle_list[6].get_viscosity_acceleration() << endl;
+                cout << "Surface_Tension_Acceleration : "
+                     << realtime_particle_list[6].get_surface_tension_acceleration() << endl;
+                cout << "Total_Acceleration : " << realtime_particle_list[6].get_acceleration() << endl;
+                cout << "Velocity : " << realtime_particle_list[6].get_velocity() << endl;
+
+            }
             restrict_particles();
+            cout << "AFTER RESTRICT : " << realtime_particle_list[6].get_acceleration() << endl;
+            cout << "Velocity : " << realtime_particle_list[6].get_velocity() << endl;
+            cout << "Position : " << realtime_particle_list[6].get_position() << endl;
+
+            cout << endl;
+
             update_position();
             fluid_database.append_particle_list(i, realtime_particle_list);
         }
@@ -137,9 +147,11 @@ private:
 //                if (p_i.get_index() == p_j.get_index()) {
 //                    continue;
 //                }
-                tmp_density += fluid_parameter.get_particle_mass() *
-                               compute_kernel_poly6(p_i.get_position() - p_j.get_position(),
-                                                    fluid_parameter.get_core_radius());
+                if ((p_i.get_position() - p_j.get_position()).length() <= fluid_parameter.get_core_radius()) {
+                    tmp_density += fluid_parameter.get_particle_mass() *
+                                   compute_kernel_poly6(p_i.get_position() - p_j.get_position(),
+                                                        fluid_parameter.get_core_radius());
+                }
             }
             p_i.set_density(tmp_density);
 
@@ -147,7 +159,6 @@ private:
     }
 
     void compute_pressure() {
-        auto tmp_vector = realtime_particle_list;
         for (auto &p_i:realtime_particle_list) {
             p_i.set_pressure(
                     fluid_parameter.get_gas_constant() * (p_i.get_density() - fluid_parameter.get_rest_density()));
@@ -159,9 +170,12 @@ private:
         for (auto &p_i:realtime_particle_list) {
             auto tmp_force = vec3();
             for (auto &p_j:tmp_vector) {
-                tmp_force += (p_i.get_pressure() + p_j.get_pressure()) / p_j.get_density() *
-                             compute_kernel_spiky_hamiltonian(p_i.get_position() - p_j.get_position(),
-                                                              fluid_parameter.get_core_radius());
+                if ((p_i.get_position() - p_j.get_position()).length() <= fluid_parameter.get_core_radius()) {
+                    tmp_force += (p_i.get_pressure() + p_j.get_pressure()) / p_j.get_density() *
+                                 compute_kernel_spiky_hamiltonian(p_i.get_position() - p_j.get_position(),
+                                                                  fluid_parameter.get_core_radius());
+                }
+
             }
             p_i.set_pressure_acceleration(
                     -1.0 * fluid_parameter.get_particle_mass() / (p_i.get_density() * 2) * tmp_force);
@@ -173,9 +187,12 @@ private:
         for (auto &p_i:realtime_particle_list) {
             auto tmp_force = vec3();
             for (auto &p_j:tmp_vector) {
-                tmp_force += (p_i.get_velocity() - p_j.get_velocity()) * p_j.get_density() *
-                             compute_kernel_viscosity_laplacian(p_i.get_position() - p_j.get_position(),
-                                                                fluid_parameter.get_core_radius());
+                if ((p_i.get_position() - p_j.get_position()).length() <= fluid_parameter.get_core_radius()) {
+
+                    tmp_force += (p_i.get_velocity() - p_j.get_velocity()) * p_j.get_density() *
+                                 compute_kernel_viscosity_laplacian(p_i.get_position() - p_j.get_position(),
+                                                                    fluid_parameter.get_core_radius());
+                }
             }
             p_i.set_viscosity_acceleration(
                     fluid_parameter.get_viscosity_coefficient() * fluid_parameter.get_particle_mass() /
@@ -190,12 +207,15 @@ private:
             auto tmp_gradient = vec3();
             auto tmp_curvature = 0.0;
             for (auto &p_j:tmp_vector) {
-                tmp_gradient += (1.0 / p_j.get_density()) *
-                                compute_kernel_poly6_hamiltonian(p_i.get_position() - p_j.get_position(),
-                                                                 fluid_parameter.get_core_radius());
-                tmp_curvature += (1.0 / p_j.get_density()) *
-                                 compte_kernel_poly6_laplacian(p_i.get_position() - p_j.get_position(),
-                                                               fluid_parameter.get_core_radius());
+                if ((p_i.get_position() - p_j.get_position()).length() <= fluid_parameter.get_core_radius()) {
+
+                    tmp_gradient += (1.0 / p_j.get_density()) *
+                                    compute_kernel_poly6_hamiltonian(p_i.get_position() - p_j.get_position(),
+                                                                     fluid_parameter.get_core_radius());
+                    tmp_curvature += (1.0 / p_j.get_density()) *
+                                     compute_kernel_poly6_laplacian(p_i.get_position() - p_j.get_position(),
+                                                                    fluid_parameter.get_core_radius());
+                }
             }
             tmp_gradient *= -1.0 * fluid_parameter.get_particle_mass();
             tmp_curvature *= fluid_parameter.get_particle_mass();
@@ -224,7 +244,7 @@ private:
                _offset_vec;
     }
 
-    const double_t compte_kernel_poly6_laplacian(const vec3 &_offset_vec, const double_t &_core_radius) {
+    const double_t compute_kernel_poly6_laplacian(const vec3 &_offset_vec, const double_t &_core_radius) {
         double_t tmp_dis = _offset_vec.length();
         double_t squared_distance = _offset_vec.squared_distance();
         double_t squared_radius = pow(_core_radius, 2);

@@ -30,6 +30,9 @@ public:
     }
 
     void restrict_particle(Particle &in_particle) {
+        if(in_particle.get_index() == 7){
+            int a = 1;
+        }
         if (in_particle.get_velocity().length() == 0) {
             return;
         }
@@ -52,8 +55,8 @@ public:
                                                           points_arr[i], normal_arr[i], tmp_dis);
 //                cout << "tmp dis" << tmp_dis << endl;
                 vec3 tmp_vec1 = in_particle.get_position() + tmp_dis * in_particle.get_velocity().normalize();
-                if (is_intersected && tmp_dis > nearest_dis &&
-                    !detect_restriction(in_particle.get_position() + tmp_dis * in_particle.get_velocity())) {
+                if (is_intersected && tmp_dis > nearest_dis){
+//                    !detect_restriction(in_particle.get_position() + tmp_dis * in_particle.get_velocity().normalize())) {
                     nearest_dis = tmp_dis;
                     nearest_index = i;
                 }
