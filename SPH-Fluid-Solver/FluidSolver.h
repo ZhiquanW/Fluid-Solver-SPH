@@ -81,7 +81,7 @@ public:
                    (double) (fluid_database.get_frame_num() - i) / i * (double) duration.count() /
                    std::chrono::microseconds::period::den / 60);
             compute_particle_acceleration();
-            if (true) {
+            if (false) {
                 cout << endl;
                 cout << "Index : " << realtime_particle_list[6].get_index() << endl;
                 cout << "Density : " << realtime_particle_list[6].get_density() << endl;
@@ -95,11 +95,11 @@ public:
 
             }
             restrict_particles();
-            cout << "AFTER RESTRICT : " << realtime_particle_list[6].get_acceleration() << endl;
-            cout << "Velocity : " << realtime_particle_list[6].get_velocity() << endl;
-            cout << "Position : " << realtime_particle_list[6].get_position() << endl;
-
-            cout << endl;
+//            cout << "AFTER RESTRICT : " << realtime_particle_list[6].get_acceleration() << endl;
+//            cout << "Velocity : " << realtime_particle_list[6].get_velocity() << endl;
+//            cout << "Position : " << realtime_particle_list[6].get_position() << endl;
+//
+//            cout << endl;
 
             update_position();
             fluid_database.append_particle_list(i, realtime_particle_list);

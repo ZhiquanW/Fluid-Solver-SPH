@@ -54,8 +54,9 @@ public:
         int counter = -1;
         for (const auto &list:this->particle_matrix) {
             fout << ++counter << endl;
+            size_t p_num = 0;
             for (const auto &p:list) {
-                fout << p.get_position() << endl;
+                fout <<p_num++ <<" "<< p.get_position() << endl;
             }
         }
     }
