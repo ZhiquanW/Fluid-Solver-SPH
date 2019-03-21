@@ -69,17 +69,20 @@ public:
         auto start = std::chrono::system_clock::now();
         auto end = std::chrono::system_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
+        auto is_display = 0;
         cout << "Start Simulation : " << fluid_database.get_frame_num() << " frames" << endl;
         for (size_t i = 0; i < fluid_database.get_frame_num(); ++i) {
-            cout << flush << '\r';
-            printf("%.2lf%%", (i + 1.0) * 100.0 / fluid_database.get_frame_num());
-            end = std::chrono::system_clock::now();
-            duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-            printf("\t%.2f min", (double) duration.count() / std::chrono::microseconds::period::den / 60);
-            printf("\tEstimated Time : %.2f min",
-                   (double) (fluid_database.get_frame_num() - i) / i * (double) duration.count() /
-                   std::chrono::microseconds::period::den / 60);
+            if (is_display) {
+                cout << flush << '\r';
+                printf("%.2lf%%", (i + 1.0) * 100.0 / fluid_database.get_frame_num());
+                end = std::chrono::system_clock::now();
+                duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+                printf("\t%.2f min", (double) duration.count() / std::chrono::microseconds::period::den / 60);
+                printf("\tEstimated Time : %.2f min",
+                       (double) (fluid_database.get_frame_num() - i) / i * (double) duration.count() /
+                       std::chrono::microseconds::period::den / 60);
+            }
+
             compute_particle_acceleration();
             if (false) {
                 cout << endl;
@@ -134,8 +137,9 @@ private:
 
     void update_position() {
         for (auto &p:realtime_particle_list) {
+
             p.set_velocity(p.get_velocity() + p.get_acceleration() * fluid_database.get_frame_interval());
-            p.set_position(p.get_position() + p.get_velocity() * fluid_database.get_frame_interval());
+
         }
     }
 
@@ -185,14 +189,29 @@ private:
     void compute_viscosity_acceleration() {
         auto tmp_vector = realtime_particle_list;
         for (auto &p_i:realtime_particle_list) {
-            auto tmp_force = vec3();
-            for (auto &p_j:tmp_vector) {
-                if ((p_i.get_position() - p_j.get_position()).length() <= fluid_parameter.get_core_radius()) {
+            vec3 tmp_force = vec3();
+            vector<Particle> tmp_p_vec;
 
-                    tmp_force += (p_i.get_velocity() - p_j.get_velocity()) * p_j.get_density() *
-                                 compute_kernel_viscosity_laplacian(p_i.get_position() - p_j.get_position(),
-                                                                    fluid_parameter.get_core_radius());
+            for (auto &p_j:tmp_vector) {
+                tmp_force += (p_i.get_velocity() - p_j.get_velocity()) * p_j.get_density() *
+                             compute_kernel_viscosity_laplacian(p_i.get_position() - p_j.get_position(),
+                                                                fluid_parameter.get_core_radius());
+                if (p_i.get_index() == 12 &&
+                    (p_i.get_position() - p_j.get_position()).length() <= fluid_parameter.get_core_radius()) {
+                        cout << "R : " << fluid_parameter.get_core_radius() << endl;
+
+                        cout << "V : " << (p_i.get_velocity() - p_j.get_velocity()).length() << endl;
+                        cout << "D_j: " << p_j.get_density() << endl;
+                        cout << "P_o" <<
+                        cout << compute_kernel_viscosity_laplacian(p_i.get_position() - p_j.get_position(),
+                                                                   fluid_parameter.get_core_radius()) << endl;
+                        cout << endl;
+                    tmp_p_vec.emplace_back(p_j);
                 }
+            }
+            if (p_i.get_index() == 12) {
+                cout << "SIZE" << realtime_particle_list.size() << endl;
+                cout << tmp_force << endl;
             }
             p_i.set_viscosity_acceleration(
                     fluid_parameter.get_viscosity_coefficient() * fluid_parameter.get_particle_mass() /
@@ -208,7 +227,6 @@ private:
             auto tmp_curvature = 0.0;
             for (auto &p_j:tmp_vector) {
                 if ((p_i.get_position() - p_j.get_position()).length() <= fluid_parameter.get_core_radius()) {
-
                     tmp_gradient += (1.0 / p_j.get_density()) *
                                     compute_kernel_poly6_hamiltonian(p_i.get_position() - p_j.get_position(),
                                                                      fluid_parameter.get_core_radius());
