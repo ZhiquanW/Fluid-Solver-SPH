@@ -69,7 +69,7 @@ public:
         auto start = std::chrono::system_clock::now();
         auto end = std::chrono::system_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-        auto is_display = 0;
+        auto is_display = 1;
         cout << "Start Simulation : " << fluid_database.get_frame_num() << " frames" << endl;
         for (size_t i = 0; i < fluid_database.get_frame_num(); ++i) {
             if (is_display) {
@@ -84,26 +84,7 @@ public:
             }
 
             compute_particle_acceleration();
-            if (false) {
-                cout << endl;
-                cout << "Index : " << realtime_particle_list[6].get_index() << endl;
-                cout << "Density : " << realtime_particle_list[6].get_density() << endl;
-                cout << "Pressure : " << realtime_particle_list[6].get_pressure() << endl;
-                cout << "Pressure_Acceleration : " << realtime_particle_list[6].get_pressure_acceleration() << endl;
-                cout << "Viscosity_Acceleration : " << realtime_particle_list[6].get_viscosity_acceleration() << endl;
-                cout << "Surface_Tension_Acceleration : "
-                     << realtime_particle_list[6].get_surface_tension_acceleration() << endl;
-                cout << "Total_Acceleration : " << realtime_particle_list[6].get_acceleration() << endl;
-                cout << "Velocity : " << realtime_particle_list[6].get_velocity() << endl;
-
-            }
             restrict_particles();
-//            cout << "AFTER RESTRICT : " << realtime_particle_list[6].get_acceleration() << endl;
-//            cout << "Velocity : " << realtime_particle_list[6].get_velocity() << endl;
-//            cout << "Position : " << realtime_particle_list[6].get_position() << endl;
-//
-//            cout << endl;
-
             update_position();
             fluid_database.append_particle_list(i, realtime_particle_list);
         }
@@ -111,6 +92,7 @@ public:
 
     void output_data() {
         fluid_database.export_database();
+        fluid_database.export_viscosity();
     }
 
 
@@ -137,9 +119,8 @@ private:
 
     void update_position() {
         for (auto &p:realtime_particle_list) {
-
             p.set_velocity(p.get_velocity() + p.get_acceleration() * fluid_database.get_frame_interval());
-
+            p.set_position(p.get_position() + p.get_velocity() * fluid_database.get_frame_interval());
         }
     }
 
@@ -190,32 +171,17 @@ private:
         auto tmp_vector = realtime_particle_list;
         for (auto &p_i:realtime_particle_list) {
             vec3 tmp_force = vec3();
-            vector<Particle> tmp_p_vec;
-
             for (auto &p_j:tmp_vector) {
-                tmp_force += (p_i.get_velocity() - p_j.get_velocity()) * p_j.get_density() *
-                             compute_kernel_viscosity_laplacian(p_i.get_position() - p_j.get_position(),
-                                                                fluid_parameter.get_core_radius());
-                if (p_i.get_index() == 12 &&
-                    (p_i.get_position() - p_j.get_position()).length() <= fluid_parameter.get_core_radius()) {
-                        cout << "R : " << fluid_parameter.get_core_radius() << endl;
+                tmp_force += (p_j.get_velocity() - p_i.get_velocity()) / p_j.get_density() *
+                             compute_kernel_viscosity_laplacian(
+                                     p_i.get_position() -
+                                     p_j.get_position(),
+                                     fluid_parameter.get_core_radius());
 
-                        cout << "V : " << (p_i.get_velocity() - p_j.get_velocity()).length() << endl;
-                        cout << "D_j: " << p_j.get_density() << endl;
-                        cout << "P_o" <<
-                        cout << compute_kernel_viscosity_laplacian(p_i.get_position() - p_j.get_position(),
-                                                                   fluid_parameter.get_core_radius()) << endl;
-                        cout << endl;
-                    tmp_p_vec.emplace_back(p_j);
-                }
+                p_i.set_viscosity_acceleration(
+                        fluid_parameter.get_viscosity_coefficient() * fluid_parameter.get_particle_mass() /
+                        p_i.get_density() * tmp_force);
             }
-            if (p_i.get_index() == 12) {
-                cout << "SIZE" << realtime_particle_list.size() << endl;
-                cout << tmp_force << endl;
-            }
-            p_i.set_viscosity_acceleration(
-                    fluid_parameter.get_viscosity_coefficient() * fluid_parameter.get_particle_mass() /
-                    p_i.get_density() * tmp_force);
         }
     }
 
@@ -289,7 +255,6 @@ private:
         return 45.0 / (M_PI * pow(_core_radius, 6)) * (_core_radius - tmp_dis);
     }
 
-public:
     const vector<Particle> &get_realtime_particle_list() const {
         return realtime_particle_list;
     }

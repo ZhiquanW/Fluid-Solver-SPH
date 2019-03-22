@@ -56,7 +56,23 @@ public:
             fout << ++counter << endl;
             size_t p_num = 0;
             for (const auto &p:list) {
-                fout <<p_num++ <<" "<< p.get_position() << endl;
+                fout << p_num++ << " " << p.get_position() << endl;
+            }
+        }
+    }
+
+    void export_viscosity() {
+        fstream fout;
+        fout.open(this->file_name + "viscosity", ios::out);
+        fout << file_name << endl;
+        fout << particle_num << " " << frame_num << " " << frame_interval << " " << frame_interval << " "
+             << animation_duration << endl;
+        int counter = -1;
+        for (const auto &list:this->particle_matrix) {
+            fout << ++counter << endl;
+            size_t p_num = 0;
+            for (const auto &p:list) {
+                fout << p_num++ << " " << p.get_viscosity_acceleration() << endl;
             }
         }
     }

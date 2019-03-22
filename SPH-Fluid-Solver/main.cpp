@@ -56,9 +56,9 @@ void test_compute_functions() {
     auto t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::stringstream ss;
     ss << std::put_time(std::localtime(&t), "%F %T");
-    const FluidParameter tmp_paras(10*10*10, 1.0, 0.18, 45.0, 0.0, 0.08, 0.0000001, 9.8);
+    const FluidParameter tmp_paras(10*10*10, 1.0, 0.18, 45.0, 0.015, 0.08, 0.001, 9.8);
     const RestrictionBox tmp_box(vec3(-5, -5, -5), vec3(110, 210, 110));
-    FluidDatabase tmp_database("test1"+ss.str(), tmp_paras.get_particle_num(), 600, 0.01);
+    FluidDatabase tmp_database(ss.str(), tmp_paras.get_particle_num(), 600, 0.01);
     FluidSolver tmp_solver(tmp_paras, tmp_box, tmp_database);
     tmp_solver.initialize_particles(vec3(100, 100, 100), 20.0*0.03*2.0);
     tmp_solver.simulate_particles();
