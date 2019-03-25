@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 public class FluidManager : MonoBehaviour {
+    public String fileName;
     public ParticleController particlePerfab;
     public int particleNum;
     public int fps;
@@ -23,27 +24,29 @@ public class FluidManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         for (int i = 0; i < particleNum; ++i) {
-            var tmpObject = GameObject.Instantiate(particlePerfab, this.transform, true);
+            var tmpObject = GameObject.Instantiate(particlePerfab);
             tmpObject.GetComponent<ParticleController>().index = i;
             tmpObject.transform.position = particleDatabase[0][i];
-            particleList.Add(particlePerfab);
+            particleList.Add(tmpObject);
         }
     }
 
     // Update is called once per frame
-    void FixedUpdate() {
-        ++currentFrame;
-        if (currentFrame >= frameNum) {
-            return;
+    void Update() {
+        if (currentFrame == frameNum - 1) {
+            currentFrame = 0;
         }
-        for (int i = 0; i < particleNum;++ i) {
+
+        ++currentFrame;
+    
+        for (int i = 0; i < particleNum; ++i) {
             particleList[i].transform.position = particleDatabase[currentFrame][i];
         }
     }
 
     private void LoadData() {
         var lines = System.IO.File.ReadAllLines(
-            @"/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/cmake-build-debug/2019-03-22-17:34:03");
+            @"/home/zhiquan/Git-Repository/Fluid-Solver-SPH/SPH-Fluid-Solver/cmake-build-debug/"+fileName);
         string[] parameters = lines[1].Split(' ');
         particleNum = int.Parse(parameters[0]);
         frameNum = int.Parse(parameters[1]);
@@ -73,6 +76,5 @@ public class FluidManager : MonoBehaviour {
                 particleDatabase[i][tmp_index] = tmp_pos;
             }
         }
-
     }
 }

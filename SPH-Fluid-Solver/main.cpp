@@ -56,14 +56,17 @@ void test_compute_functions() {
     auto t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::stringstream ss;
     ss << std::put_time(std::localtime(&t), "%F %T");
+    string tmp_s = ss.str();
+    long tmp_index = tmp_s.find(' ');
+    tmp_s[tmp_index] = '-';
     const FluidParameter tmp_paras(10*10*10, 1.0, 0.18, 45.0, 0.015, 0.08, 0.001, 9.8);
-    const RestrictionBox tmp_box(vec3(-5, -5, -5), vec3(110, 210, 110));
-    FluidDatabase tmp_database(ss.str(), tmp_paras.get_particle_num(), 600, 0.01);
+    const RestrictionBox tmp_box(vec3(-5, -5, -5), vec3(5, 5, 5));
+    FluidDatabase tmp_database(tmp_s, tmp_paras.get_particle_num(), 1000, 0.02);
     FluidSolver tmp_solver(tmp_paras, tmp_box, tmp_database);
-    tmp_solver.initialize_particles(vec3(100, 100, 100), 20.0*0.03*2.0);
+    tmp_solver.initialize_particles(vec3(0, 3, 0), 20.0*0.03*2.0);
     tmp_solver.simulate_particles();
     tmp_solver.output_data();
-    cout << "End" << endl;
+    cout <<endl<< "End" << endl;
 }
 
 void test_iterator() {
