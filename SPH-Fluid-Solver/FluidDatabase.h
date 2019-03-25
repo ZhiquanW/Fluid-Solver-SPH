@@ -49,7 +49,7 @@ public:
         fstream fout;
         fout.open(this->file_name.c_str(), ios::out);
         fout << file_name << endl;
-        fout << particle_num << " " << frame_num << " " << frame_interval << " " << frame_interval << " "
+        fout << particle_num << " " << frame_num << " " << frame_interval << " "
              << animation_duration << endl;
         int counter = -1;
         for (const auto &list:this->particle_matrix) {
